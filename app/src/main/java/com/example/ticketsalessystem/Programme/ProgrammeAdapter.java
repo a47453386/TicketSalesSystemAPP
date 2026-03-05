@@ -1,4 +1,4 @@
-package Programme;
+package com.example.ticketsalessystem.Programme;
 
 import android.content.Context;
 import android.content.Intent;
@@ -59,10 +59,10 @@ public class ProgrammeAdapter extends RecyclerView.Adapter<ProgrammeAdapter.View
 
         // 🚩 點擊事件：跳轉到購票頁面
         holder.itemView.setOnClickListener(v -> {
-            // 使用 v.getContext() 獲取最準確的 Context
-//            Intent intent = new Intent(v.getContext(), TicketActivity.class);
-//            intent.putExtra("SESSION_ID", item.sessionID);
-//            v.getContext().startActivity(intent);
+//             使用 v.getContext() 獲取最準確的 Context
+            Intent intent = new Intent(v.getContext(), TicketActivity.class);
+            intent.putExtra("PROGRAMME_ID", item.programmeID);
+            v.getContext().startActivity(intent);
         });
     }
 
