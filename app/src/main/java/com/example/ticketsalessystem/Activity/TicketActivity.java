@@ -1,4 +1,4 @@
-package com.example.ticketsalessystem.Programme;
+package com.example.ticketsalessystem.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;

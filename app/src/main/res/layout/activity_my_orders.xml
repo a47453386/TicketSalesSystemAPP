@@ -1,3 +1,4 @@
+<?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:id="@+id/main"
     android:layout_width="match_parent"
@@ -6,6 +7,7 @@
     android:orientation="vertical">
 
     <TextView
+        android:id="@+id/tv_order_marquee"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:background="#220044"
@@ -26,18 +28,27 @@
         android:text="[ 訂單查詢系統 ]"
         android:textColor="#FFCC00"
         android:textSize="24sp"
-        android:textStyle="bold" />
+        android:textStyle="bold"
+        android:fontFamily="monospace" />
 
-    <androidx.recyclerview.widget.RecyclerView
-        android:id="@+id/rv_orders"
+    <FrameLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:padding="4dp" />
-    <ProgressBar
-        android:id="@+id/pb_loading"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center"
-        android:indeterminateTint="#FFCC00"
-        android:visibility="gone" />
+        android:layout_height="match_parent">
+
+        <androidx.recyclerview.widget.RecyclerView
+            android:id="@+id/rv_orders"
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:padding="4dp"
+            android:clipToPadding="false"
+            android:paddingBottom="80dp" />
+
+        <ProgressBar
+            android:id="@+id/pb_loading"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:indeterminateTint="#FFCC00"
+            android:visibility="gone" />
+    </FrameLayout>
 </LinearLayout>

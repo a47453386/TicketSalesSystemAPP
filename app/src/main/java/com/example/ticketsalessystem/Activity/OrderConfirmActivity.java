@@ -1,4 +1,4 @@
-package com.example.ticketsalessystem.Programme;
+package com.example.ticketsalessystem.Activity;
 
 import android.content.Intent;
 import android.os.Bundle;
@@ -14,7 +14,6 @@ import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 
-import com.example.ticketsalessystem.Orders.MyOrdersActivity;
 import com.example.ticketsalessystem.R;
 import com.example.ticketsalessystem.RetrofitClient;
 

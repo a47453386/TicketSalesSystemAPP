@@ -1,0 +1,153 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/pixel_bg_dark">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="20dp">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="[ 我有問題 ]"
+            android:textColor="@color/pixel_yellow"
+            android:textSize="22sp"
+            android:textStyle="bold"
+            android:fontFamily="monospace"
+            android:layout_marginBottom="24dp" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="#15FF00CC"
+            android:padding="16dp"
+            android:orientation="vertical"
+            android:layout_marginBottom="30dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="! 注意事項"
+                android:textColor="@color/pixel_pink"
+                android:textStyle="bold"
+                android:layout_marginBottom="8dp" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="● 於 7 個工作天內回覆。\n● 退票必須上傳 PDF 申請書。"
+                android:textColor="@color/white"
+                android:textSize="14sp"
+                android:lineSpacingExtra="4dp" />
+        </LinearLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="問題種類:"
+            android:textColor="@color/pixel_blue"
+            android:textSize="16sp"
+            android:fontFamily="monospace"
+            android:layout_marginBottom="8dp" />
+
+        <Spinner
+            android:id="@+id/spinner_question_type"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:background="@drawable/pixel_layout_frame_blue"
+            android:layout_marginBottom="24dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="主旨:"
+            android:textColor="@color/pixel_blue"
+            android:textSize="16sp"
+            android:fontFamily="monospace"
+            android:layout_marginBottom="8dp" />
+
+        <EditText
+            android:id="@+id/et_question_title"
+            android:layout_width="match_parent"
+            android:layout_height="55dp"
+            android:background="@drawable/pixel_layout_frame_blue"
+            android:textColor="@color/white"
+            android:paddingHorizontal="12dp"
+            android:hint="請簡述您的問題..."
+            android:textColorHint="#444"
+            android:textSize="14sp"
+            android:layout_marginBottom="24dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="詳細內容:"
+            android:textColor="@color/pixel_blue"
+            android:textSize="16sp"
+            android:fontFamily="monospace"
+            android:layout_marginBottom="8dp" />
+
+        <EditText
+            android:id="@+id/et_question_desc"
+            android:layout_width="match_parent"
+            android:layout_height="120dp"
+            android:background="@drawable/pixel_layout_frame_blue"
+            android:textColor="@color/white"
+            android:padding="12dp"
+            android:gravity="top"
+            android:hint="請描述詳細情況..."
+            android:textColorHint="#444"
+            android:textSize="14sp"
+            android:layout_marginBottom="24dp" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="附件檔案 (PDF):"
+            android:textColor="@color/pixel_blue"
+            android:textSize="16sp"
+            android:fontFamily="monospace" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal"
+            android:gravity="center_vertical"
+            android:padding="8dp"
+            android:layout_marginBottom="24dp">
+
+            <Button
+                android:id="@+id/btn_select_pdf"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="選擇 PDF"
+                style="@style/Widget.AppCompat.Button.Small"/>
+
+            <TextView
+                android:id="@+id/tv_pdf_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="未選擇檔案"
+                android:textColor="#88FFFFFF"
+                android:layout_marginStart="12dp"
+                android:textSize="12sp"/>
+        </LinearLayout>
+
+        <Button
+            android:id="@+id/btn_submit_question"
+            android:layout_width="match_parent"
+            android:layout_height="70dp"
+            android:backgroundTint="@color/pixel_pink"
+            android:text="[ 發送 ]"
+            android:textColor="@color/white"
+            android:textSize="18sp"
+            android:fontFamily="monospace"
+            android:layout_marginTop="10dp"
+            android:layout_marginBottom="60dp" />
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

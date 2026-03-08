@@ -1,6 +1,7 @@
-package com.example.ticketsalessystem.Orders;
+package com.example.ticketsalessystem.Adapters;
 
 import android.content.Context;
+import android.content.Intent;
 import android.graphics.Color;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -8,13 +9,16 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
 import android.widget.TextView;
+
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
+
+import com.example.ticketsalessystem.Activity.OrderDetailActivity;
 import com.example.ticketsalessystem.R;
+
 import java.util.List;
 
 import Model.BookingDetailsResponse;
-
 import Model.TicketDetail;
 
 public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHolder> {
@@ -22,14 +26,16 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
     private List<BookingDetailsResponse> orderList;
     private Context context;
 
-    public OrderAdapter(List<BookingDetailsResponse> orderList, Context context) {
-        this.orderList = orderList;
+    // 🚩 修正建構子：確保呼叫時傳入 context 以利跳轉頁面
+    public OrderAdapter(List<BookingDetailsResponse> list, Context context) {
+        this.orderList = list;
         this.context = context;
     }
 
     @NonNull
     @Override
     public OrderViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
+        // 載入你在佈局中定義的 CardView
         View view = LayoutInflater.from(parent.getContext()).inflate(R.layout.item_user_order, parent, false);
         return new OrderViewHolder(view);
     }
@@ -38,23 +44,24 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
     public void onBindViewHolder(@NonNull OrderViewHolder holder, int position) {
         BookingDetailsResponse order = orderList.get(position);
 
-        // 1. 基礎資訊綁定
-        holder.tvOrderId.setText("訂單編號: " + order.orderID);
+        // 1. 基礎資訊綁定 (使用像素風黃色標題)
+        holder.tvOrderId.setText("OrderID: " + order.orderID);
         holder.tvProgrammeName.setText(order.programmeName);
         holder.tvStartTime.setText(order.startTime);
         holder.tvAmount.setText("總計額：$" + (int)order.finalAmount);
 
-        // 2. 🚩 狀態顏色與按鈕邏輯 (對應 MVC switch)
+        // 2. 🚩 狀態顯示與按鈕邏輯
         if ("Y".equals(order.orderStatusID)) {
             holder.tvStatus.setText("● 付款完成");
             holder.tvStatus.setTextColor(Color.parseColor("#00FF66")); // 像素亮綠
             holder.btnAction.setVisibility(View.VISIBLE);
             holder.btnAction.setText("入場證明");
             holder.btnAction.setOnClickListener(v -> {
-                // 這裡可以導向顯示 QR Code 的 Activity
-                // Intent intent = new Intent(context, TicketDetailActivity.class);
-                // intent.putExtra("ORDER_ID", order.orderID);
-                // context.startActivity(intent);
+                // 跳轉至訂單明細/QR Code 頁面
+                Intent intent = new Intent(context, OrderDetailActivity.class);
+                intent.putExtra("ORDER_ID", order.orderID);
+                intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK); // 增加安全性
+                context.startActivity(intent);
             });
         } else if ("P".equals(order.orderStatusID)) {
             holder.tvStatus.setText("● 待付款");
@@ -62,7 +69,8 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
             holder.btnAction.setVisibility(View.VISIBLE);
             holder.btnAction.setText("前往付款");
             holder.btnAction.setOnClickListener(v -> {
-                // 回到付款頁面
+                // 🚩 此處可串接你原有的付款 Activity 跳轉
+                android.widget.Toast.makeText(context, "正在導向付款網頁...", android.widget.Toast.LENGTH_SHORT).show();
             });
         } else if ("C".equals(order.orderStatusID)) {
             holder.tvStatus.setText("● 已取消");
@@ -78,11 +86,13 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
 
                 // 組合票券細項 (Row, Seat, Price)
                 StringBuilder sb = new StringBuilder();
-                if (order.ticketDetails != null) {
+                if (order.ticketDetails != null && !order.ticketDetails.isEmpty()) {
                     for (TicketDetail detail : order.ticketDetails) {
-                        sb.append("🎟️ ").append(detail.seatInfo)
+                        sb.append("🎟️ ").append(detail.seatInfo != null ? detail.seatInfo : "一般票")
                                 .append(" | $").append((int)detail.price).append("\n");
                     }
+                } else {
+                    sb.append("暫無票券細項資料");
                 }
                 holder.tvDetailContent.setText(sb.toString());
             } else {
@@ -97,7 +107,7 @@ public class OrderAdapter extends RecyclerView.Adapter<OrderAdapter.OrderViewHol
         return orderList != null ? orderList.size() : 0;
     }
 
-    // --- ViewHolder 內部類別 ---
+    // --- ViewHolder 內部類別 (對應佈局 ID) ---
     public static class OrderViewHolder extends RecyclerView.ViewHolder {
         TextView tvOrderId, tvProgrammeName, tvStartTime, tvAmount, tvStatus, tvDetailContent;
         Button btnToggleDetail, btnAction;

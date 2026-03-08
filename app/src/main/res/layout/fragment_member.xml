@@ -1,0 +1,164 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/pixel_bg_dark"
+    android:fillViewport="true">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:background="@drawable/pixel_layout_frame_blue"
+            android:padding="20dp"
+            android:layout_marginBottom="24dp">
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="[ 會員中心 ]"
+                android:textColor="@color/pixel_yellow"
+                android:textSize="20sp"
+                android:layout_gravity="center"
+                android:fontFamily="monospace" />
+        </FrameLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="20dp"
+            android:background="@drawable/layer_list"
+            android:layout_marginBottom="16dp">
+
+            <ImageView
+                android:id="@+id/img_member_avatar"
+                android:layout_width="80dp"
+                android:layout_height="80dp"
+                android:src="@drawable/ic_member"
+                android:background="@color/pixel_blue"
+                android:padding="10dp" />
+
+            <TextView
+                android:id="@+id/tv_member_name"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="LOADING..."
+                android:textColor="@color/pixel_yellow"
+                android:textSize="22sp"
+                android:layout_marginTop="12dp"
+                android:fontFamily="monospace" />
+
+            <TextView
+                android:id="@+id/tv_phone_status"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="● 驗證狀態讀取中"
+                android:textColor="@color/white"
+                android:textSize="13sp"
+                android:layout_marginTop="4dp" />
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/layer_list"
+            android:padding="16dp"
+            android:layout_marginBottom="16dp">
+
+            <TextView style="@style/MemberInfoLabel" android:text="身分證字號 / NATIONAL ID" />
+            <TextView android:id="@+id/tv_national_id" style="@style/MemberInfoValue" android:text="********" />
+            <View style="@style/MemberDivider" />
+
+            <TextView style="@style/MemberInfoLabel" android:text="性別 / GENDER" />
+            <TextView android:id="@+id/tv_gender" style="@style/MemberInfoValue" android:text="MALE / FEMALE" />
+            <View style="@style/MemberDivider" />
+
+            <TextView style="@style/MemberInfoLabel" android:text="出生日期 / BIRTHDAY" />
+            <TextView android:id="@+id/tv_birthday" style="@style/MemberInfoValue" android:text="0000-00-00" />
+            <View style="@style/MemberDivider" />
+
+            <TextView style="@style/MemberInfoLabel" android:text="手機號碼 / PHONE" />
+            <TextView android:id="@+id/tv_tel" style="@style/MemberInfoValue" android:text="0912-345-678" />
+            <View style="@style/MemberDivider" />
+
+            <TextView style="@style/MemberInfoLabel" android:text="電子郵件 / EMAIL" />
+            <TextView android:id="@+id/tv_email" style="@style/MemberInfoValue" android:text="loading..." />
+            <View style="@style/MemberDivider" />
+
+            <TextView style="@style/MemberInfoLabel" android:text="通訊地址 / ADDRESS" />
+            <TextView android:id="@+id/tv_address" style="@style/MemberInfoValue" android:text="loading..." />
+
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:background="@drawable/layer_list"
+            android:padding="16dp"
+            android:layout_marginBottom="24dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text=">>> 快速跳轉 / QUICK NAV"
+                android:textColor="@color/pixel_blue"
+                android:textSize="12sp"
+                android:layout_marginBottom="12dp"
+                android:fontFamily="monospace" />
+
+            <Button
+                android:id="@+id/btn_nav_user_orders"
+                style="@style/PixelIconButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="訂單查詢"
+                android:textColor="#00FF66"
+                android:layout_marginBottom="12dp"
+                android:gravity="start|center_vertical"
+                android:paddingStart="16dp" />
+
+            <Button
+                android:id="@+id/btn_nav_my_questions"
+                style="@style/PixelIconButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="我的問題清單"
+                android:textColor="@color/pixel_yellow"
+                android:layout_marginBottom="12dp"
+                android:gravity="start|center_vertical"
+                android:paddingStart="16dp" />
+
+            <Button
+                android:id="@+id/btn_nav_update_profile"
+                style="@style/PixelIconButton"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="更新資料"
+                android:textColor="@color/white"
+                android:gravity="start|center_vertical"
+                android:paddingStart="16dp" />
+        </LinearLayout>
+
+        <TextView
+            android:id="@+id/tv_member_marquee"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="&gt;&gt;&gt; 系統訊息: 預售票請先手機認證... &lt;&lt;&lt;"
+            android:textColor="#88FFFFFF"
+            android:singleLine="true"
+            android:ellipsize="marquee"
+            android:marqueeRepeatLimit="marquee_forever"
+            android:fontFamily="monospace"
+            android:paddingBottom="80dp" />
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

@@ -1,4 +1,4 @@
-package com.example.ticketsalessystem.Programme;
+package com.example.ticketsalessystem.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
@@ -11,6 +11,7 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
+import com.example.ticketsalessystem.Activity.TicketActivity;
 import com.example.ticketsalessystem.R;
 
 import java.util.List;
@@ -22,7 +23,6 @@ public class ProgrammeAdapter extends RecyclerView.Adapter<ProgrammeAdapter.View
     private List<ProgrammeModel> mData;
     private Context mContext;
 
-    // 建構子：讓 MainActivity 把資料傳進來
     public ProgrammeAdapter(Context context, List<ProgrammeModel> data) {
         this.mContext = context;
         this.mData = data;
@@ -31,7 +31,7 @@ public class ProgrammeAdapter extends RecyclerView.Adapter<ProgrammeAdapter.View
     @NonNull
     @Override
     public ViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
-        // 🚩 載入你之前做好的 item_programme.xml 佈局
+        // 🚩 載入對應的 item_programme.xml 佈局
         View view = LayoutInflater.from(mContext).inflate(R.layout.item_programme, parent, false);
         return new ViewHolder(view);
     }
@@ -39,30 +39,43 @@ public class ProgrammeAdapter extends RecyclerView.Adapter<ProgrammeAdapter.View
     @Override
     public void onBindViewHolder(@NonNull ViewHolder holder, int position) {
         ProgrammeModel item = mData.get(position);
+        if (item == null) return;
 
-        // 填入文字資料
+        // 1. 填入基本文字資料
         holder.tvName.setText(item.programmeName);
-        holder.tvPlace.setText(item.placeName);
-        holder.tvRemaining.setText("剩餘票數：" + item.remaining);
+        holder.tvPlace.setText("@ " + item.placeName);
         holder.tvStartTime.setText("時間：" + item.startTime);
 
-        // 處理公告小圖示
-        if (item.publicNoticeTilte != null && !item.publicNoticeTilte.isEmpty()) {
-            holder.tvName.append(" [📢]");
+        // 2. 處理剩餘票數與視覺顏色
+        if (item.remaining <= 0) {
+            holder.tvRemaining.setText("[ SOLD OUT ]");
+            holder.tvRemaining.setTextColor(mContext.getResources().getColor(android.R.color.holo_red_dark));
+        } else {
+            holder.tvRemaining.setText("剩餘票數：" + item.remaining);
+            // 🚩 使用像素藍色以維持整體風格
+            holder.tvRemaining.setTextColor(mContext.getResources().getColor(R.color.pixel_blue));
         }
 
-        // 🚩 使用 Glide 載入後端拼好的完整圖片網址
+        // 3. 🚩 處理圖片網址 IP 轉換 (解決模擬器讀取問題)
+        String imageUrl = item.coverImage;
+        if (imageUrl != null && imageUrl.contains("192.168.0.107")) {
+            // 將電腦實體 IP 替換為模擬器專用的 10.0.2.2
+            imageUrl = imageUrl.replace("192.168.0.107", "10.0.2.2");
+        }
+
+        // 4. 使用 Glide 載入圖片並進行像素優化
         Glide.with(mContext)
-                .load(item.coverImage)
-                .placeholder(android.R.drawable.ic_menu_gallery) // 載入中的暫位圖
+                .load(imageUrl)
+                .centerCrop()
+                .placeholder(R.drawable.pixel_placeholder)
                 .into(holder.imgCover);
 
-        // 🚩 點擊事件：跳轉到購票頁面
+        // 5. 設定點擊項目跳轉至購票頁面
         holder.itemView.setOnClickListener(v -> {
-//             使用 v.getContext() 獲取最準確的 Context
-            Intent intent = new Intent(v.getContext(), TicketActivity.class);
+            Intent intent = new Intent(mContext, TicketActivity.class);
+            // 傳遞節目 ID 以供後端查詢詳細資訊
             intent.putExtra("PROGRAMME_ID", item.programmeID);
-            v.getContext().startActivity(intent);
+            mContext.startActivity(intent);
         });
     }
 
@@ -71,7 +84,6 @@ public class ProgrammeAdapter extends RecyclerView.Adapter<ProgrammeAdapter.View
         return mData != null ? mData.size() : 0;
     }
 
-    // ViewHolder：定義卡片裡有哪些 UI 元件
     public static class ViewHolder extends RecyclerView.ViewHolder {
         ImageView imgCover;
         TextView tvName, tvPlace, tvRemaining, tvStartTime;
@@ -82,8 +94,7 @@ public class ProgrammeAdapter extends RecyclerView.Adapter<ProgrammeAdapter.View
             tvName = itemView.findViewById(R.id.tv_name);
             tvPlace = itemView.findViewById(R.id.tv_place);
             tvRemaining = itemView.findViewById(R.id.tv_remaining);
-            tvStartTime = itemView.findViewById(R.id.tv_start_time); // 🚩 記得 XML 也要有這個 ID
+            tvStartTime = itemView.findViewById(R.id.tv_start_time);
         }
     }
-
 }

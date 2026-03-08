@@ -1,0 +1,69 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:fillViewport="true"
+    android:background="@color/pixel_bg_dark">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:paddingBottom="24dp">
+
+        <FrameLayout
+            android:layout_width="match_parent"
+            android:layout_height="220dp"
+            android:layout_marginBottom="10dp">
+
+            <androidx.viewpager2.widget.ViewPager2
+                android:id="@+id/viewPagerBanner"
+                android:layout_width="match_parent"
+                android:layout_height="match_parent" />
+
+            <com.google.android.material.tabs.TabLayout
+                android:id="@+id/tabLayoutIndicator"
+                android:layout_width="wrap_content"
+                android:layout_height="20dp"
+                android:layout_gravity="bottom|center"
+                android:layout_marginBottom="12dp"
+                android:background="@android:color/transparent"
+                app:tabIndicatorHeight="0dp"
+                app:tabRippleColor="@android:color/transparent" />
+        </FrameLayout>
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=">>> 系統公告"
+            android:textColor="@color/pixel_yellow"
+            android:layout_marginStart="16dp"
+            android:fontFamily="monospace" />
+
+        <FrameLayout
+            android:id="@+id/news_component_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="12dp"
+            android:padding="2dp"
+            android:background="@drawable/layer_list" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text=">>> 活動"
+            android:textColor="@color/pixel_blue"
+            android:layout_marginStart="16dp"
+            android:fontFamily="monospace" />
+
+        <FrameLayout
+            android:id="@+id/programme_component_container"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="12dp"
+            android:padding="2dp"
+            android:background="@drawable/layer_list" />
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

@@ -15,17 +15,21 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.TicketSalesSystem"
         android:usesCleartextTraffic="true">
+
         <activity
-            android:name=".Orders.MyOrdersActivity"
+            android:name=".Activity.MyOrdersActivity"
             android:exported="false" />
         <activity
-            android:name=".Programme.OrderConfirmActivity"
+            android:name=".Activity.OrderDetailActivity"
             android:exported="false" />
         <activity
-            android:name=".Programme.TicketActivity"
+            android:name=".Activity.OrderConfirmActivity"
             android:exported="false" />
         <activity
-            android:name=".MainActivity"
+            android:name=".Activity.TicketActivity"
+            android:exported="false" />
+        <activity
+            android:name=".Activity.MainActivity"
             android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
