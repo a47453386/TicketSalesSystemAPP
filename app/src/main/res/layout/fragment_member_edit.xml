@@ -26,16 +26,31 @@
             android:background="#1A1A1A"
             android:padding="15dp"
             android:orientation="vertical">
-            <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"
-                android:text="🔒 基本資料 (不可修改)" android:textColor="#00CCFF" android:textSize="12sp" />
-            <TextView android:id="@+id/tv_display_name" android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:textColor="#FFFFFF" android:paddingTop="8dp" />
-            <TextView android:id="@+id/tv_display_birthday" android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:textColor="#FFFFFF" />
-            <TextView android:id="@+id/tv_display_id" android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:textColor="#FFFFFF" />
-            <TextView android:id="@+id/tv_display_gender" android:layout_width="match_parent"
-                android:layout_height="wrap_content" android:textColor="#FFFFFF" />
+            <TextView android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="🔒 基本資料 (不可修改)"
+                android:textColor="#00CCFF"
+                android:textSize="12sp" />
+            <TextView android:id="@+id/tv_display_name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#FFFFFF"
+                android:paddingTop="8dp" />
+            <TextView
+                android:id="@+id/tv_display_birthday"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#FFFFFF" />
+            <TextView
+                android:id="@+id/tv_display_id"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#FFFFFF" />
+            <TextView
+                android:id="@+id/tv_display_gender"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:textColor="#FFFFFF" />
         </LinearLayout>
 
         <TextView android:layout_width="wrap_content" android:layout_height="wrap_content"

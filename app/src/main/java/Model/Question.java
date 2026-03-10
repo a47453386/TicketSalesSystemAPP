@@ -21,6 +21,7 @@ public class Question {
     @SerializedName("replyStatusID")    // 🚩 新增
     public String replyStatusID;
 
+
     @SerializedName("hasUpload")        // 🚩 新增
     public boolean hasUpload;
 
