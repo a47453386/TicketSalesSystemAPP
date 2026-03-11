@@ -3,6 +3,9 @@ package Model;
 import com.google.gson.annotations.SerializedName;
 
 public class ReplyItem {
+
+    @SerializedName("replyStatusID")
+    public String replyStatusID;
     @SerializedName("replyDescription")
     public String replyDescription;
 
@@ -14,4 +17,6 @@ public class ReplyItem {
 
     @SerializedName("createdTime")
     public String createdTime;
+
+
 }

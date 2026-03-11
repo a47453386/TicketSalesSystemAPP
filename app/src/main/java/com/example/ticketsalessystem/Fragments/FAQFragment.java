@@ -35,7 +35,7 @@ public class FAQFragment extends Fragment {
     }
 
     private void fetchFAQs() {
-        RetrofitClient.getApiService().GetFAQs().enqueue(new Callback<List<FAQ>>() {
+        RetrofitClient.getApiService(getContext()).GetFAQs().enqueue(new Callback<List<FAQ>>() {
             @Override
             public void onResponse(Call<List<FAQ>> call, Response<List<FAQ>> response) {
                 if (isAdded() && response.isSuccessful() && response.body() != null) {

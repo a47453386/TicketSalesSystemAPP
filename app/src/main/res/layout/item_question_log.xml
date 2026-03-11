@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
     android:background="@drawable/pixel_layout_frame_blue"
     android:orientation="horizontal"
     android:padding="15dp"
@@ -30,6 +31,14 @@
         android:ellipsize="end"
         android:maxLines="1"
         android:paddingHorizontal="8dp" />
+    <ImageView
+        android:id="@+id/iv_has_attachment"
+        android:layout_width="16dp"
+        android:layout_height="16dp"
+        android:layout_marginEnd="5dp"
+        android:src="@drawable/ic_programmes"
+        android:visibility="gone"
+        app:tint="@color/pixel_blue" />
 
     <TextView
         android:id="@+id/tv_q_status"

@@ -59,7 +59,7 @@ public class OrderDetailActivity extends AppCompatActivity {
 
     private void fetchData(String id) {
         // 調用 API
-        RetrofitClient.getApiService().getOrderDetail(id).enqueue(new Callback<UserOrderDetail>() {
+        RetrofitClient.getApiService(this).getOrderDetail(id).enqueue(new Callback<UserOrderDetail>() {
             @Override
             public void onResponse(Call<UserOrderDetail> call, Response<UserOrderDetail> response) {
                 if (response.isSuccessful() && response.body() != null) {

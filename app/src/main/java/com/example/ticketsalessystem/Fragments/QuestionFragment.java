@@ -125,7 +125,7 @@ public class QuestionFragment extends Fragment {
         }
 
         // 執行 API 傳輸
-        RetrofitClient.getApiService().QuestionsCreate(rbTitle, rbDesc, rbType, filePart)
+        RetrofitClient.getApiService(getContext()).QuestionsCreate(rbTitle, rbDesc, rbType, filePart)
                 .enqueue(new Callback<ResponseBody>() {
                     @Override
                     public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {

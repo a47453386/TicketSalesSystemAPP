@@ -68,7 +68,7 @@ public class MemberEditFragment extends Fragment {
         if (pbLoading != null) pbLoading.setVisibility(View.VISIBLE);
 
         // 呼叫 ApiService 抓取資料
-        RetrofitClient.getApiService().GetProfile(currentMemberId).enqueue(new Callback<MemberUserEdit>() {
+        RetrofitClient.getApiService(getContext()).GetProfile(currentMemberId).enqueue(new Callback<MemberUserEdit>() {
             @Override
             public void onResponse(Call<MemberUserEdit> call, Response<MemberUserEdit> response) {
                 if (isAdded() && pbLoading != null) pbLoading.setVisibility(View.GONE);
@@ -125,7 +125,7 @@ public class MemberEditFragment extends Fragment {
         updateVm.address = newAddress;
 
         // 送出 POST 請求
-        RetrofitClient.getApiService().UpdateProfile(updateVm).enqueue(new Callback<ResponseBody>() {
+        RetrofitClient.getApiService(getContext()).UpdateProfile(updateVm).enqueue(new Callback<ResponseBody>() {
             @Override
             public void onResponse(Call<ResponseBody> call, Response<ResponseBody> response) {
                 if (isAdded() && pbLoading != null) pbLoading.setVisibility(View.GONE);

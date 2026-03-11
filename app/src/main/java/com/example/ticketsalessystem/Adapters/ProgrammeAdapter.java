@@ -2,6 +2,7 @@ package com.example.ticketsalessystem.Adapters;
 
 import android.content.Context;
 import android.content.Intent;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -11,7 +12,8 @@ import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 
 import com.bumptech.glide.Glide;
-import com.example.ticketsalessystem.Activity.TicketActivity;
+import com.example.ticketsalessystem.Activity.MainActivity;
+import com.example.ticketsalessystem.Fragments.TicketFragment;
 import com.example.ticketsalessystem.R;
 
 import java.util.List;
@@ -72,10 +74,18 @@ public class ProgrammeAdapter extends RecyclerView.Adapter<ProgrammeAdapter.View
 
         // 5. 設定點擊項目跳轉至購票頁面
         holder.itemView.setOnClickListener(v -> {
-            Intent intent = new Intent(mContext, TicketActivity.class);
-            // 傳遞節目 ID 以供後端查詢詳細資訊
-            intent.putExtra("PROGRAMME_ID", item.programmeID);
-            mContext.startActivity(intent);
+            android.content.Context currentContext = v.getContext();
+
+            if (currentContext instanceof MainActivity) {
+                // 1. 建立 Fragment 實例
+                String pId = item.programmeID;
+                TicketFragment detailFragment = TicketFragment.newInstance(pId);
+
+                // 2. 強制轉型並呼叫 switchFragment
+                ((MainActivity) currentContext).switchFragment(detailFragment);
+            } else {
+                Log.e("AdapterError", "Context is not MainActivity!");
+            }
         });
     }
 

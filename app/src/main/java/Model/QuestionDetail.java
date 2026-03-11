@@ -2,6 +2,8 @@ package Model;
 
 import com.google.gson.annotations.SerializedName;
 
+import java.util.List;
+
 public class QuestionDetail {
     @SerializedName("questionID")
     public String questionID;
@@ -21,7 +23,13 @@ public class QuestionDetail {
     @SerializedName("questionTypeName")
     public String questionTypeName;
 
+    @SerializedName("replyStatusID")
+    public String replyStatusID;
+
+    @SerializedName("hasUpload")        // 🚩 新增
+    public boolean hasUpload;
+
     // 🚩 注意這裡：JSON 裡面的 Key 是 "reply"
     @SerializedName("reply")
-    public List<ReplyItem> replies;
+    public List<ReplyItem> reply;
 }

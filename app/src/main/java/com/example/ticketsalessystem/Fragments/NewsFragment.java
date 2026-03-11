@@ -42,7 +42,7 @@ public class NewsFragment extends Fragment {
 
     private void fetchNewsData() {
         // 使用你的 RetrofitClient 進行連線
-        ApiService apiService = RetrofitClient.getInstance().create(ApiService.class);
+        ApiService apiService = RetrofitClient.getInstance(getContext()).create(ApiService.class);
         apiService.GetFiveNews().enqueue(new Callback<List<PublicNotice>>() {
             @Override
             public void onResponse(Call<List<PublicNotice>> call, Response<List<PublicNotice>> response) {

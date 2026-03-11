@@ -7,6 +7,8 @@ import Model.BookingDetailsResponse;
 import Model.BookingRequest;
 import Model.BookingResponse;
 import Model.FAQ;
+import Model.LoginRequest;
+import Model.LoginResponse;
 import Model.Member;
 import Model.MemberUserEdit;
 import Model.PaymentRequest;
@@ -15,6 +17,7 @@ import Model.ProgrammeModel;
 import Model.PublicNotice;
 
 import Model.Question;
+import Model.QuestionDetail;
 import Model.UserOrderDetail;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -37,21 +40,11 @@ public interface ApiService {
     @GET("api/HomeApi/FiveNews")
     Call<List<PublicNotice>> GetFiveNews();
 
-    //全部公告
-    @GET("api/PublicNoticeApi/AllNews")
-    Call<List<PublicNotice>> GetAllNews();
 
-
-
-
-    //會員資料
-    @GET("api/HomeApi/MembersDetails/{id}")
-    Call<Member> GetMemberDetails(@Path("id") String id);
 
     //常見問題
     @GET("api/HomeApi/FAQs")
     Call<List<FAQ>> GetFAQs();
-
 
     //我要發問
     @Multipart
@@ -63,9 +56,18 @@ public interface ApiService {
             @Part MultipartBody.Part upload // 🚩 這裡對應 C# 的 IFormFile? upload
     );
 
-    //問題清單
-    @GET("api/HomeApi/GetMyQuestions/")
-    Call<List<Question>> GetMyQuestions();
+
+
+    //登入
+    @POST("api/HomeApi/Login")
+    Call<LoginResponse> login(@Body LoginRequest request);
+
+
+
+
+    //會員資料
+    @GET("api/MemberApi/MembersDetails/{id}")
+    Call<Member> GetMemberDetails(@Path("id") String id);
 
     //會員基本資料更新
     // 獲取目前資料填充編輯框
@@ -75,6 +77,48 @@ public interface ApiService {
     // 送出修改資料
     @POST("api/MemberApi/UpdateProfile")
     Call<ResponseBody> UpdateProfile(@Body MemberUserEdit model);
+
+
+
+
+
+    //訂單總攬
+    @GET("api/OrdersApi/api/OrdersIndex")
+    Call<List<BookingDetailsResponse>> GetOrdersIndex() ;
+
+    //訂單詳情
+    @GET("api/OrdersApi/OrdersDetail/{id}")
+    Call<UserOrderDetail> getOrderDetail(@Path("id") String id) ;
+
+
+
+
+    //全部公告
+    @GET("api/PublicNoticeApi/AllNews")
+    Call<List<PublicNotice>> GetAllNews();
+
+
+
+
+    //問題清單
+    @GET("api/QuestionApi/GetMyQuestions/")
+    Call<List<QuestionDetail>> GetMyQuestions();
+
+    //問題詳細資料
+    @GET("api/QuestionApi/GetQuestionsDetail/{id}")
+    Call<QuestionDetail> getQuestionDetail(@Path("id") String id);
+
+
+
+
+
+
+
+
+
+
+
+
 
 
 
@@ -88,12 +132,9 @@ public interface ApiService {
     //支付方式
     @POST("api/SeatsApi/payment")
     Call<BookingResponse> processPayment(@Body PaymentRequest request);
-    //訂單總攬
-    @GET("api/OrdersApi/api/OrdersIndex")
-    Call<List<BookingDetailsResponse>> GetOrdersIndex() ;
 
-    //訂單詳情
-    @GET("api/OrdersApi/OrdersDetail/{id}")
-    Call<UserOrderDetail> getOrderDetail(@Path("id") String id) ;
+
+
+
 
 }

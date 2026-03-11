@@ -65,7 +65,7 @@ public class MemberFragment extends Fragment {
     }
 
     private void fetchMemberData(String id) {
-        RetrofitClient.getApiService().GetMemberDetails(id).enqueue(new Callback<Member>() {
+        RetrofitClient.getApiService(getContext()).GetMemberDetails(id).enqueue(new Callback<Member>() {
             @Override
             public void onResponse(Call<Member> call, Response<Member> response) {
                 if (isAdded() && response.isSuccessful() && response.body() != null) {

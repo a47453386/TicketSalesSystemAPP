@@ -38,7 +38,7 @@ public class NewsListFragment extends Fragment {
 
     private void fetchAllNews() {
         // 🚩 呼叫獲取所有公告的接口
-        RetrofitClient.getApiService().GetAllNews().enqueue(new Callback<List<PublicNotice>>() {
+        RetrofitClient.getApiService(getContext()).GetAllNews().enqueue(new Callback<List<PublicNotice>>() {
             @Override
             public void onResponse(Call<List<PublicNotice>> call, Response<List<PublicNotice>> response) {
                 if (isAdded() && response.isSuccessful() && response.body() != null) {

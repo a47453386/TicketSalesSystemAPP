@@ -38,7 +38,7 @@ public class FeatureProgrammesFragment extends Fragment {
     }
 
     private void fetchFeatureData() {
-        ApiService apiService = RetrofitClient.getApiService();
+        ApiService apiService = RetrofitClient.getApiService(getContext());
         apiService.getProgrammes().enqueue(new Callback<List<ProgrammeModel>>() {
             @Override
             public void onResponse(Call<List<ProgrammeModel>> call, Response<List<ProgrammeModel>> response) {

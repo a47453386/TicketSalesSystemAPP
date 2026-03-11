@@ -1,0 +1,120 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.core.widget.NestedScrollView xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/pixel_bg_dark">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="32dp"
+        android:gravity="center_horizontal">
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:fontFamily="monospace"
+            android:text="[ 建立身分檔案 ]"
+            android:textColor="@color/pixel_yellow"
+            android:textSize="22sp"
+            android:textStyle="bold" />
+
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="8dp"
+            android:fontFamily="monospace"
+            android:text="NEW_USER_REGISTRATION"
+            android:textColor="@color/pixel_blue"
+            android:textSize="12sp" />
+
+        <EditText
+            android:id="@+id/et_reg_account"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="32dp"
+            android:background="@drawable/pixel_border"
+            android:fontFamily="monospace"
+            android:hint="&gt; 設定帳號 (Email)"
+            android:inputType="textEmailAddress"
+            android:paddingHorizontal="16dp"
+            android:textColor="@color/white"
+            android:textColorHint="@color/pixel_text_muted" />
+
+        <EditText
+            android:id="@+id/et_reg_password"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/pixel_border"
+            android:fontFamily="monospace"
+            android:hint="&gt; 設定密碼"
+            android:inputType="textPassword"
+            android:paddingHorizontal="16dp"
+            android:textColor="@color/white"
+            android:textColorHint="@color/pixel_text_muted" />
+
+        <EditText
+            android:id="@+id/et_reg_confirm_password"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/pixel_border"
+            android:fontFamily="monospace"
+            android:hint="&gt; 確認密碼"
+            android:inputType="textPassword"
+            android:paddingHorizontal="16dp"
+            android:textColor="@color/white"
+            android:textColorHint="@color/pixel_text_muted" />
+
+        <EditText
+            android:id="@+id/et_reg_name"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/pixel_border"
+            android:fontFamily="monospace"
+            android:hint="&gt; 真實姓名"
+            android:inputType="textPersonName"
+            android:paddingHorizontal="16dp"
+            android:textColor="@color/white"
+            android:textColorHint="@color/pixel_text_muted" />
+
+        <EditText
+            android:id="@+id/et_reg_phone"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/pixel_border"
+            android:fontFamily="monospace"
+            android:hint="&gt; 手機號碼"
+            android:inputType="phone"
+            android:paddingHorizontal="16dp"
+            android:textColor="@color/white"
+            android:textColorHint="@color/pixel_text_muted" />
+
+        <Button
+            android:id="@+id/btn_execute_register"
+            android:layout_width="match_parent"
+            android:layout_height="60dp"
+            android:layout_marginTop="32dp"
+            android:background="@drawable/pixel_layout_frame_blue"
+            android:fontFamily="monospace"
+            android:text="[ 執行註冊 ]"
+            android:textColor="@color/pixel_yellow"
+            android:textSize="18sp" />
+
+        <TextView
+            android:id="@+id/tv_back_to_login"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:layout_marginBottom="32dp"
+            android:fontFamily="monospace"
+            android:text="&lt; 已有身分? 返回登入"
+            android:textColor="@color/pixel_pink"
+            android:textSize="13sp" />
+
+    </LinearLayout>
+</androidx.core.widget.NestedScrollView>

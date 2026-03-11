@@ -2,154 +2,158 @@
 <FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@color/pixel_bg_dark"> <androidx.core.widget.NestedScrollView
+    android:layout_width="match_parent"
     android:layout_height="match_parent">
 
-    <ScrollView
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:background="#FFFFFF">
+        android:layout_height="wrap_content"
+        android:paddingBottom="40dp">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <FrameLayout
+            android:id="@+id/img_frame"
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:paddingBottom="32dp">
-
+            android:layout_height="250dp"
+            android:background="@color/black"
+            android:padding="4dp"
+            app:layout_constraintTop_toTopOf="parent">
             <ImageView
                 android:id="@+id/img_detail_cover"
-                android:layout_width="0dp"
-                android:layout_height="250dp"
-                android:scaleType="centerCrop"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                android:src="@android:drawable/ic_menu_gallery" />
-
-            <TextView
-                android:id="@+id/tv_detail_name"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                android:text="活動名稱載入中..."
-                android:textColor="#333333"
-                android:textSize="22sp"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/img_detail_cover" />
-
-            <TextView
-                android:id="@+id/tv_detail_place"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="8dp"
-                android:text="地點載入中..."
-                android:textColor="#666666"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_detail_name" />
-
-            <View
-                android:id="@+id/divider"
                 android:layout_width="match_parent"
-                android:layout_height="1dp"
-                android:layout_margin="16dp"
-                android:background="#EEEEEE"
-                app:layout_constraintTop_toBottomOf="@id/tv_detail_place" />
+                android:layout_height="match_parent"
+                android:scaleType="centerCrop"
+                android:src="@android:drawable/ic_menu_gallery" />
+        </FrameLayout>
+
+        <TextView
+            android:id="@+id/tv_detail_name"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:fontFamily="monospace"
+            android:text="[ 活動名稱載入中 ]"
+            android:textColor="@color/pixel_yellow"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/img_frame" />
+
+        <TextView
+            android:id="@+id/tv_detail_place"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="4dp"
+            android:fontFamily="monospace"
+            android:text=">>> 地點載入中..."
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_detail_name" />
+
+        <LinearLayout
+            android:id="@+id/selection_box"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:background="@drawable/pixel_layout_frame_blue"
+            android:orientation="vertical"
+            android:padding="20dp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_detail_place">
 
             <TextView
-                android:id="@+id/label_session"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="16dp"
-                android:text="1. 請選擇場次時間："
-                android:textStyle="bold"
-                android:textColor="#333333"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/divider" />
+                android:fontFamily="monospace"
+                android:text="1. 選擇場次時間："
+                android:textColor="@color/pixel_blue"
+                android:textSize="14sp" />
 
             <Spinner
                 android:id="@+id/spinner_sessions"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:layout_marginHorizontal="16dp"
                 android:layout_marginTop="8dp"
-                android:background="@android:drawable/btn_dropdown"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/label_session" />
+                android:background="@drawable/pixel_border"
+                android:overlapAnchor="false" />
 
             <TextView
-                android:id="@+id/label_area"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="16dp"
-                android:layout_marginTop="20dp"
-                android:text="2. 請選擇票價區域："
-                android:textStyle="bold"
-                android:textColor="#333333"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/spinner_sessions" />
+                android:layout_marginTop="16dp"
+                android:fontFamily="monospace"
+                android:text="2. 選擇票價區域："
+                android:textColor="@color/pixel_blue"
+                android:textSize="14sp" />
 
             <Spinner
                 android:id="@+id/spinner_areas"
-                android:layout_width="0dp"
+                android:layout_width="match_parent"
                 android:layout_height="48dp"
-                android:layout_marginHorizontal="16dp"
                 android:layout_marginTop="8dp"
-                android:background="@android:drawable/btn_dropdown"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/label_area" />
+                android:background="@drawable/pixel_border" />
+        </LinearLayout>
 
-            <TextView
-                android:id="@+id/tv_area_info"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_marginHorizontal="16dp"
-                android:layout_marginTop="16dp"
-                android:background="#F5F5F5"
-                android:padding="16dp"
-                android:text="請先選擇場次與區域..."
-                android:textColor="#FF4081"
-                android:textStyle="bold"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/spinner_areas" />
+        <TextView
+            android:id="@+id/tv_area_info"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_marginHorizontal="16dp"
+            android:layout_marginTop="16dp"
+            android:background="@drawable/pixel_layout_frame_yellow"
+            android:fontFamily="monospace"
+            android:padding="16dp"
+            android:text="等待系統回應中..."
+            android:textColor="@color/white"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/selection_box" />
 
-            <TextView
-                android:id="@+id/tv_detail_description"
-                android:layout_width="0dp"
-                android:layout_height="wrap_content"
-                android:layout_margin="16dp"
-                android:text="活動描述載入中..."
-                android:lineSpacingExtra="4dp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_area_info" />
+        <TextView
+            android:id="@+id/tv_detail_description"
+            android:layout_width="0dp"
+            android:layout_height="wrap_content"
+            android:layout_margin="16dp"
+            android:fontFamily="monospace"
+            android:lineSpacingExtra="6dp"
+            android:text="活動詳情載入中..."
+            android:textColor="@color/pixel_text_muted"
+            android:textSize="14sp"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_area_info" />
 
-            <Button
-                android:id="@+id/btn_buy"
-                android:layout_width="0dp"
-                android:layout_height="56dp"
-                android:layout_margin="24dp"
-                android:text="立即購票 (系統配票)"
-                android:backgroundTint="#FF4081"
-                android:textColor="#FFFFFF"
-                android:textSize="18sp"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_detail_description" />
+        <Button
+            android:id="@+id/btn_buy"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_margin="24dp"
+            android:background="@drawable/pixel_layout_frame_blue"
+            android:fontFamily="monospace"
+            android:text="[ 立即購票 ]"
+            android:textColor="@color/pixel_yellow"
+            android:textSize="18sp"
+            android:textStyle="bold"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@id/tv_detail_description" />
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
-    </ScrollView>
+    </androidx.constraintlayout.widget.ConstraintLayout>
+</androidx.core.widget.NestedScrollView>
 
     <ProgressBar
         android:id="@+id/progressBar"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:indeterminateTint="@color/pixel_yellow"
         android:visibility="gone" />
 
 </FrameLayout>

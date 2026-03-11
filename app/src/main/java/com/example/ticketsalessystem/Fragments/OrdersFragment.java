@@ -34,7 +34,7 @@ public class OrdersFragment extends Fragment {
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         // 1. 載入你的黑底黃字佈局
-        View v = inflater.inflate(R.layout.activity_my_orders, container, false);
+        View v = inflater.inflate(R.layout.fragment_my_orders, container, false);
 
         // 2. 初始化元件
         rvOrders = v.findViewById(R.id.rv_orders);
@@ -59,7 +59,7 @@ public class OrdersFragment extends Fragment {
         pbLoading.setVisibility(View.VISIBLE); // 顯示轉圈圈
 
         // 🚩 修正：因為 API 沒定義參數，所以這裡不能傳入 memberId
-        RetrofitClient.getApiService().GetOrdersIndex().enqueue(new Callback<List<BookingDetailsResponse>>() {
+        RetrofitClient.getApiService(getContext()).GetOrdersIndex().enqueue(new Callback<List<BookingDetailsResponse>>() {
             @Override
             public void onResponse(Call<List<BookingDetailsResponse>> call, Response<List<BookingDetailsResponse>> response) {
                 if (isAdded()) pbLoading.setVisibility(View.GONE); // 關閉轉圈圈
