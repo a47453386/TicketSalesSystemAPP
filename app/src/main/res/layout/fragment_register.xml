@@ -15,7 +15,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:fontFamily="monospace"
-            android:text="[ 建立身分檔案 ]"
+            android:text="[ 註冊會員 ]"
             android:textColor="@color/pixel_yellow"
             android:textSize="22sp"
             android:textStyle="bold" />
@@ -23,21 +23,29 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="4dp"
             android:fontFamily="monospace"
-            android:text="NEW_USER_REGISTRATION"
+            android:text="新增會員"
             android:textColor="@color/pixel_blue"
+            android:textSize="10sp" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:fontFamily="monospace"
+            android:text="-- 帳號密碼 --"
+            android:textColor="@color/pixel_text_muted"
             android:textSize="12sp" />
 
         <EditText
             android:id="@+id/et_reg_account"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:layout_marginTop="32dp"
+            android:layout_marginTop="8dp"
             android:background="@drawable/pixel_border"
             android:fontFamily="monospace"
-            android:hint="&gt; 設定帳號 (Email)"
-            android:inputType="textEmailAddress"
+            android:hint="&gt; 登入帳號"
             android:paddingHorizontal="16dp"
             android:textColor="@color/white"
             android:textColorHint="@color/pixel_text_muted" />
@@ -46,7 +54,7 @@
             android:id="@+id/et_reg_password"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="12dp"
             android:background="@drawable/pixel_border"
             android:fontFamily="monospace"
             android:hint="&gt; 設定密碼"
@@ -59,7 +67,7 @@
             android:id="@+id/et_reg_confirm_password"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="12dp"
             android:background="@drawable/pixel_border"
             android:fontFamily="monospace"
             android:hint="&gt; 確認密碼"
@@ -69,14 +77,105 @@
             android:textColorHint="@color/pixel_text_muted" />
 
         <EditText
+            android:id="@+id/et_reg_email"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/pixel_border"
+            android:fontFamily="monospace"
+            android:hint="&gt; 電子郵件 (Email)"
+            android:inputType="textEmailAddress"
+            android:paddingHorizontal="16dp"
+            android:textColor="@color/white"
+            android:textColorHint="@color/pixel_text_muted" />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="24dp"
+            android:fontFamily="monospace"
+            android:text="-- 基本資料 --"
+            android:textColor="@color/pixel_text_muted"
+            android:textSize="12sp" />
+
+        <EditText
             android:id="@+id/et_reg_name"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="8dp"
             android:background="@drawable/pixel_border"
             android:fontFamily="monospace"
             android:hint="&gt; 真實姓名"
-            android:inputType="textPersonName"
+            android:paddingHorizontal="16dp"
+            android:textColor="@color/white"
+            android:textColorHint="@color/pixel_text_muted" />
+
+        <EditText
+            android:id="@+id/et_reg_national_id"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/pixel_border"
+            android:fontFamily="monospace"
+            android:hint="&gt; 身分證字號"
+            android:inputType="textCapCharacters"
+            android:paddingHorizontal="16dp"
+            android:textColor="@color/white"
+            android:textColorHint="@color/pixel_text_muted" />
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/pixel_border"
+            android:orientation="horizontal"
+            android:paddingHorizontal="16dp"
+            android:paddingVertical="8dp">
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:fontFamily="monospace"
+                android:text="&gt; 性別:"
+                android:textColor="@color/pixel_text_muted" />
+
+            <RadioGroup
+                android:id="@+id/rg_reg_gender"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:orientation="horizontal"
+                android:paddingStart="16dp">
+
+                <RadioButton
+                    android:id="@+id/rb_reg_male"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:fontFamily="monospace"
+                    android:text="男(M)"
+                    android:textColor="@color/white"
+                    android:buttonTint="@color/pixel_blue" />
+
+                <RadioButton
+                    android:id="@+id/rb_reg_female"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="16dp"
+                    android:fontFamily="monospace"
+                    android:text="女(F)"
+                    android:textColor="@color/white"
+                    android:buttonTint="@color/pixel_pink" />
+            </RadioGroup>
+        </LinearLayout>
+
+        <EditText
+            android:id="@+id/et_reg_birthday"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/pixel_border"
+            android:focusable="false"
+            android:fontFamily="monospace"
+            android:hint="&gt; 出生年月日 (yyyy-mm-dd)"
             android:paddingHorizontal="16dp"
             android:textColor="@color/white"
             android:textColorHint="@color/pixel_text_muted" />
@@ -85,11 +184,23 @@
             android:id="@+id/et_reg_phone"
             android:layout_width="match_parent"
             android:layout_height="56dp"
-            android:layout_marginTop="16dp"
+            android:layout_marginTop="12dp"
             android:background="@drawable/pixel_border"
             android:fontFamily="monospace"
             android:hint="&gt; 手機號碼"
             android:inputType="phone"
+            android:paddingHorizontal="16dp"
+            android:textColor="@color/white"
+            android:textColorHint="@color/pixel_text_muted" />
+
+        <EditText
+            android:id="@+id/et_reg_address"
+            android:layout_width="match_parent"
+            android:layout_height="56dp"
+            android:layout_marginTop="12dp"
+            android:background="@drawable/pixel_border"
+            android:fontFamily="monospace"
+            android:hint="&gt; 通訊地址"
             android:paddingHorizontal="16dp"
             android:textColor="@color/white"
             android:textColorHint="@color/pixel_text_muted" />
@@ -101,7 +212,7 @@
             android:layout_marginTop="32dp"
             android:background="@drawable/pixel_layout_frame_blue"
             android:fontFamily="monospace"
-            android:text="[ 執行註冊 ]"
+            android:text="[ 註冊 ]"
             android:textColor="@color/pixel_yellow"
             android:textSize="18sp" />
 

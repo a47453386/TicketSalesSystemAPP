@@ -8,4 +8,6 @@ public class LoginResponse {
     public boolean isSuccess() { return success; }
     public String getMemberID() { return memberID; }
     public String getName() { return name; }
+
+    public String getMessage() { return message; }
 }

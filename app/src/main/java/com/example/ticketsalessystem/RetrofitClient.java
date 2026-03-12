@@ -56,4 +56,9 @@ public class RetrofitClient {
     public static ApiService getApiService(Context context) {
         return getInstance(context).create(ApiService.class);
     }
+    public static void clearCookies() {
+        if (cookieJar != null) {
+            cookieJar.clear(); // 🚩 徹底清除所有快取與持久化的 Cookie
+        }
+    }
 }

@@ -1,16 +1,20 @@
 package com.example.ticketsalessystem.Activity;
 
-import android.content.Intent; // 🚩 補上漏掉的匯入
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
+import android.view.ContextThemeWrapper;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
+import android.widget.Button;
+import android.widget.PopupMenu;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.appcompat.app.AppCompatActivity;
 import androidx.fragment.app.Fragment;
 
-// 匯入所有的 Fragment
+// 🚩 匯入所有的 Fragment (請確認你的路徑是否正確)
 import com.example.ticketsalessystem.Fragments.HomeFragment;
 import com.example.ticketsalessystem.Fragments.FAQFragment;
 import com.example.ticketsalessystem.Fragments.LoginFragment;
@@ -19,48 +23,38 @@ import com.example.ticketsalessystem.Fragments.NewsListFragment;
 import com.example.ticketsalessystem.Fragments.OrderConfirmFragment;
 import com.example.ticketsalessystem.Fragments.OrdersFragment;
 import com.example.ticketsalessystem.Fragments.QuestionFragment;
-import com.example.ticketsalessystem.Fragments.MyQuestionsFragment; // 假設這是你的訂單/諮詢列表頁面
 import com.example.ticketsalessystem.R;
+import com.example.ticketsalessystem.RetrofitClient;
+import com.example.ticketsalessystem.SessionManager;
+import com.google.android.material.button.MaterialButton;
 
 public class MainActivity extends AppCompatActivity {
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        // 🚩 載入你那個有 Navbar + ContentFrame + StatusBar 的佈局
+        // 載入佈局
         setContentView(R.layout.activity_main);
 
-        initViews();
-        setupNavigation();
-        startStatusBlink();
+        setupNavigation();   // 初始化固定按鈕
+        updateNavUI();       // 🚩 初始化動態按鈕 (登入/會員)
+        startStatusBlink();  // 啟動底部閃爍特效
 
-        // 1. 檢查是否有從 TicketActivity 傳過來的跳轉指令
+        // 檢查是否有從其他 Activity (如 TicketActivity) 傳來的跳轉指令
         if (!checkIntentExtras()) {
-            // 2. 如果沒有指令，且是第一次啟動，則載入首頁
+            // 如果沒有特殊指令，且是第一次啟動，載入預設首頁
             if (savedInstanceState == null) {
                 switchFragment(new HomeFragment());
             }
         }
     }
 
-    private void initViews() {
-        // 這裡可以初始化你的 Navbar 背景色或其他全域 UI
-    }
-
     /**
-     * 🚩 處理「從外面跳回來」的邏輯 (例如：從購票頁跳回確認頁)
+     * 🚩 處理「從外部跳回來」的邏輯 (例如：購票完跳回確認頁)
      */
-    @Override
-    protected void onNewIntent(Intent intent) {
-        super.onNewIntent(intent);
-        setIntent(intent); // 🚩 必須更新 Intent，否則 getIntent() 拿到的還是舊的
-        checkIntentExtras();
-    }
-
     private boolean checkIntentExtras() {
         if (getIntent().hasExtra("OPEN_CONFIRM")) {
             Bundle args = getIntent().getBundleExtra("OPEN_CONFIRM");
-            // 🚩 使用剛才設計的 OrderConfirmFragment
             OrderConfirmFragment fragment = OrderConfirmFragment.newInstance(args);
             switchFragment(fragment);
             return true;
@@ -69,61 +63,125 @@ public class MainActivity extends AppCompatActivity {
     }
 
     /**
-     * 綁定頂部導航按鈕 (Navbar)
+     * 當 App 已經在背景，接收到新的 Intent 時觸發
      */
-    private void setupNavigation() {
-        // 節目資訊 (首頁)
-        findViewById(R.id.btn_nav_programmes).setOnClickListener(v -> switchFragment(new HomeFragment()));
-
-        // 最新消息
-        findViewById(R.id.btn_nav_news).setOnClickListener(v -> switchFragment(new NewsListFragment()));
-
-        // 常見問題 (FAQ)
-        findViewById(R.id.btn_nav_faq).setOnClickListener(v -> switchFragment(new FAQFragment()));
-
-        // 會員中心
-        findViewById(R.id.btn_nav_member).setOnClickListener(v -> switchFragment(new MemberFragment()));
-
-        // 我要發問 (諮詢)
-        findViewById(R.id.btn_nav_question).setOnClickListener(v -> switchFragment(new QuestionFragment()));
-
-        // 登入系統
-        findViewById(R.id.btn_nav_login).setOnClickListener(v -> {
-            // 1. 顯示像素風系統提示
-            Toast.makeText(this, "系統:會員登入...", Toast.LENGTH_SHORT).show();
-
-            // 2. 🚩 正式切換到 LoginFragment
-            switchFragment(new LoginFragment());
-        });
+    @Override
+    protected void onNewIntent(Intent intent) {
+        super.onNewIntent(intent);
+        setIntent(intent);
+        checkIntentExtras();
     }
 
     /**
-     * 🚩 核心：切換 Fragment 方法 (對應 MVC 的 RenderBody)
-     * 將內容塞進 XML 中的 content_container 插槽
+     * 綁定固定不變的導航按鈕
+     */
+    private void setupNavigation() {
+        findViewById(R.id.btn_nav_programmes).setOnClickListener(v -> switchFragment(new HomeFragment()));
+        findViewById(R.id.btn_nav_news).setOnClickListener(v -> switchFragment(new NewsListFragment()));
+        findViewById(R.id.btn_nav_faq).setOnClickListener(v -> switchFragment(new FAQFragment()));
+        findViewById(R.id.btn_nav_member).setOnClickListener(v -> switchFragment(new MemberFragment()));
+        findViewById(R.id.btn_nav_question).setOnClickListener(v -> switchFragment(new QuestionFragment()));
+
+        // 注意：btn_nav_login 的邏輯統一在 updateNavUI() 處理，避免衝突
+    }
+
+    /**
+     * 🚩 核心：根據登入狀態動態更新「登入/會員」按鈕
+     */
+    public void updateNavUI() {
+        // 1. 取得按鈕與 Session 狀態
+        Button btnNavLogin = findViewById(R.id.btn_nav_login);
+        SessionManager sessionManager = new SessionManager(this);
+
+        if (sessionManager.isLoggedIn()) {
+            // --- 🚩 登入狀態：切換為會員選單鍵 ---
+
+            // 設定圖示 (若為 MaterialButton 建議使用 setIconResource)
+            if (btnNavLogin instanceof com.google.android.material.button.MaterialButton) {
+                ((com.google.android.material.button.MaterialButton) btnNavLogin).setIconResource(R.drawable.ic_member);
+            } else {
+                btnNavLogin.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_member, 0, 0);
+            }
+
+            btnNavLogin.setOnClickListener(v -> {
+                // 🚩 A. 建立像素風 Context (套用 R.style.PixelPopupMenu)
+                androidx.appcompat.view.ContextThemeWrapper wrapper =
+                        new androidx.appcompat.view.ContextThemeWrapper(this, R.style.PixelPopupMenu);
+
+                PopupMenu popup = new PopupMenu(wrapper, v);
+                popup.getMenuInflater().inflate(R.menu.menu_member_options, popup.getMenu());
+
+                // 🚩 B. 暴力破解：強制讓 PopupMenu 顯示選單圖示 (Icons)
+                try {
+                    java.lang.reflect.Field[] fields = popup.getClass().getDeclaredFields();
+                    for (java.lang.reflect.Field field : fields) {
+                        if ("mPopup".equals(field.getName())) {
+                            field.setAccessible(true);
+                            Object menuPopupHelper = field.get(popup);
+                            Class<?> classPopupHelper = Class.forName(menuPopupHelper.getClass().getName());
+                            java.lang.reflect.Method setForceIcons = classPopupHelper.getMethod("setForceShowIcon", boolean.class);
+                            setForceIcons.invoke(menuPopupHelper, true);
+                            break;
+                        }
+                    }
+                } catch (Exception e) {
+                    e.printStackTrace();
+                }
+
+                // 🚩 C. 設定選單點擊邏輯
+                popup.setOnMenuItemClickListener(item -> {
+                    int id = item.getItemId();
+                    if (id == R.id.menu_view_profile) {
+                        switchFragment(new MemberFragment());
+                    } else if (id == R.id.menu_my_orders) {
+                        switchFragment(new OrdersFragment());
+                    } else if (id == R.id.menu_logout) {
+                        performLogout(); // 執行登出組合拳
+                    }
+                    return true;
+                });
+                popup.show();
+            });
+
+        } else {
+            // --- 🚩 未登入狀態：保持為一般登入鍵 ---
+            if (btnNavLogin instanceof com.google.android.material.button.MaterialButton) {
+                ((com.google.android.material.button.MaterialButton) btnNavLogin).setIconResource(R.drawable.ic_login);
+            } else {
+                btnNavLogin.setCompoundDrawablesWithIntrinsicBounds(0, R.drawable.ic_login, 0, 0);
+            }
+
+            btnNavLogin.setOnClickListener(v -> {
+                Toast.makeText(this, "SYSTEM: 進入登入程序...", Toast.LENGTH_SHORT).show();
+                switchFragment(new LoginFragment());
+            });
+        }
+    }
+
+    /**
+     * 🚩 執行登出組合拳
+     */
+    private void performLogout() {
+        new SessionManager(this).logout();    // 清除手機 Session
+        RetrofitClient.clearCookies();        // 清除持久化 Cookie
+        updateNavUI();                        // 立即更新 Navbar UI
+        switchFragment(new HomeFragment());   // 跳轉回首頁
+        Toast.makeText(this, "系統: 已安全登出", Toast.LENGTH_SHORT).show();
+    }
+
+    /**
+     * 通用的 Fragment 切換方法
      */
     public void switchFragment(Fragment fragment) {
         getSupportFragmentManager().beginTransaction()
                 .setCustomAnimations(android.R.anim.fade_in, android.R.anim.fade_out)
-                // 🚩 確保 ID 對應 XML 裡的 FrameLayout
                 .replace(R.id.content_container, fragment)
-                .addToBackStack(null) // 允許使用者按返回鍵回到上一個 Fragment
+                .addToBackStack(null)
                 .commit();
     }
 
     /**
-     * 🚩 功能：跳轉到「我的諮詢/訂單」列表
-     * 用於付款成功後的自動跳轉
-     */
-    public void switchToOrdersFragment() {
-        // 這裡換成你實際的訂單列表 Fragment 類別
-        switchFragment(new OrdersFragment());
-
-        // 可以在這裡視覺化提醒使用者目前在「諮詢」分頁
-        Toast.makeText(this, "支付成功！正在讀取訂單...", Toast.LENGTH_LONG).show();
-    }
-
-    /**
-     * 底部狀態小圓點閃爍效果
+     * 底部狀態欄小圓點閃爍效果
      */
     private void startStatusBlink() {
         TextView statusDot = findViewById(R.id.tv_status_dot);
@@ -134,5 +192,13 @@ public class MainActivity extends AppCompatActivity {
             blink.setRepeatCount(Animation.INFINITE);
             statusDot.startAnimation(blink);
         }
+    }
+
+    public void switchToOrdersFragment() {
+        // 切換到訂單 Fragment
+        switchFragment(new OrdersFragment());
+
+        // 顯示一條溫馨提示
+        Toast.makeText(this, "系統: 支付成功！已為您跳轉至訂單清單...", Toast.LENGTH_LONG).show();
     }
 }

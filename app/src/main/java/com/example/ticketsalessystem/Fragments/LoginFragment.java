@@ -46,12 +46,12 @@ public class LoginFragment extends Fragment {
 
         btnLogin.setOnClickListener(v -> performLogin());
 
-        // 註冊與忘記密碼的跳轉
-//        tvGoRegister.setOnClickListener(v -> {
-//            if (getActivity() instanceof MainActivity) {
-//                ((MainActivity) getActivity()).switchFragment(new RegisterFragment());
-//            }
-//        });
+//         註冊與忘記密碼的跳轉
+        tvGoRegister.setOnClickListener(v -> {
+            if (getActivity() instanceof MainActivity) {
+                ((MainActivity) getActivity()).switchFragment(new RegisterFragment());
+            }
+        });
     }
 
     private void initViews(View v) {
@@ -84,22 +84,22 @@ public class LoginFragment extends Fragment {
 
                 if (response.isSuccessful() && response.body() != null) {
                     LoginResponse result = response.body();
-                    if (result.success) {
-                        // 🚩 核心動作：將 MemberID 存入手機
-                        sessionManager.saveLoginSession(
-                                result.getMemberID(),
-                                result.getName() // 這是我們之前建議你在 API 補上的欄位
-                        );
+                    if (result.isSuccess()) {
+                        // 1. 存入保險箱 (你應該已經寫了)
+                        sessionManager.saveLoginSession(result.getMemberID(), result.getName());
 
-                        Toast.makeText(getContext(), "存取許可：歡迎回來", Toast.LENGTH_SHORT).show();
-
-                        // 登入成功後跳轉回首頁
+                        // 🚩 2. 通知 MainActivity 更新 Navbar（讓「登入」變「會員」）
                         if (getActivity() instanceof MainActivity) {
-                            ((MainActivity) getActivity()).switchFragment(new HomeFragment());
+                            MainActivity main = (MainActivity) getActivity();
+                            main.updateNavUI();
+
+                            // 🚩 3. 執行跳轉：登入成功後回首頁 (或是去會員中心)
+                            main.switchFragment(new HomeFragment());
+
+                            Toast.makeText(getContext(), "系統: 歡迎回來，" + result.getName(), Toast.LENGTH_SHORT).show();
                         }
                     } else {
-                        resetButton();
-                        Toast.makeText(getContext(), result.message, Toast.LENGTH_SHORT).show();
+                        Toast.makeText(getContext(), result.getMessage(), Toast.LENGTH_SHORT).show();
                     }
                 } else {
                     resetButton();

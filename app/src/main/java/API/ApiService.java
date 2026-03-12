@@ -10,6 +10,7 @@ import Model.FAQ;
 import Model.LoginRequest;
 import Model.LoginResponse;
 import Model.Member;
+import Model.MemberCreate;
 import Model.MemberUserEdit;
 import Model.PaymentRequest;
 import Model.ProgrammeDetail;
@@ -18,6 +19,7 @@ import Model.PublicNotice;
 
 import Model.Question;
 import Model.QuestionDetail;
+import Model.RegisterResponse;
 import Model.UserOrderDetail;
 import okhttp3.MultipartBody;
 import okhttp3.RequestBody;
@@ -39,7 +41,6 @@ public interface ApiService {
     //最新五筆公告
     @GET("api/HomeApi/FiveNews")
     Call<List<PublicNotice>> GetFiveNews();
-
 
 
     //常見問題
@@ -78,7 +79,9 @@ public interface ApiService {
     @POST("api/MemberApi/UpdateProfile")
     Call<ResponseBody> UpdateProfile(@Body MemberUserEdit model);
 
-
+    //會員註冊
+    @POST("api/HomeApi/Register")
+    Call<RegisterResponse> register(@Body MemberCreate request);
 
 
 

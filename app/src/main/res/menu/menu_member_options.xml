@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_view_profile"
+        android:title="[ 查看會員資料 ]"
+        android:icon="@drawable/ic_member" />
+    <item
+        android:id="@+id/menu_my_orders"
+        android:title="[ 我的訂單清單 ]"
+        android:icon="@drawable/ic_programmes" />
+    <item
+        android:id="@+id/menu_logout"
+        android:title="[ 安全登出 ]"
+        android:icon="@drawable/ic_login" />
+</menu>
