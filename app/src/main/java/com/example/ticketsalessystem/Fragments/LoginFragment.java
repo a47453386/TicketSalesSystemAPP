@@ -42,6 +42,10 @@ public class LoginFragment extends Fragment {
         super.onViewCreated(view, savedInstanceState);
 
         sessionManager = new SessionManager(getContext());
+        if (sessionManager.isLoggedIn()) {
+            navigateToHome();
+            return;
+        }
         initViews(view);
 
         btnLogin.setOnClickListener(v -> performLogin());
@@ -115,7 +119,15 @@ public class LoginFragment extends Fragment {
             }
         });
     }
+    private void navigateToHome() {
+        if (getActivity() instanceof MainActivity) {
+            // 切換到首頁 Fragment
+            ((MainActivity) getActivity()).switchFragment(new HomeFragment());
 
+            // 💡 提示：如果你的 switchFragment 只是單純 replace，
+            // 建議在 MainActivity 裡加上清空 BackStack 的邏輯，防止按返回鍵又看到登入。
+        }
+    }
     private void resetButton() {
         btnLogin.setEnabled(true);
         btnLogin.setText("[ 登入 ]");

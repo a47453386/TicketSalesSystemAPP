@@ -16,6 +16,8 @@ import androidx.fragment.app.Fragment;
 import com.example.ticketsalessystem.Activity.MainActivity;
 import com.example.ticketsalessystem.R;
 import com.example.ticketsalessystem.RetrofitClient;
+import com.example.ticketsalessystem.SessionManager;
+
 import Model.Member;
 import retrofit2.Call;
 import retrofit2.Callback;
@@ -26,21 +28,36 @@ public class MemberFragment extends Fragment {
     private TextView tvName, tvNationalId, tvEmail, tvAddress, tvPhoneStatus, tvBirthday, tvGender;
     private Button btnOrders, btnQuestions, btnUpdate;
 
+    private SessionManager sessionManager;
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.fragment_member, container, false);
+
+        // 🚩 2. 初始化 SessionManager
+        sessionManager = new SessionManager(requireContext());
+
+        // 🚩 3. 導覽守衛：沒登入就踢回登入頁
+        if (!sessionManager.isLoggedIn()) {
+            Toast.makeText(getContext(), "請先登入會員", Toast.LENGTH_SHORT).show();
+            if (getActivity() instanceof MainActivity) {
+                MainActivity main = (MainActivity) getActivity();
+                main.updateNavUI(); // 確保 UI 是未登入狀態
+                main.switchFragment(new LoginFragment()); // 強制跳轉
+            }
+            return view;
+        }
 
         // 1. 初始化元件 (對應你的 Layout ID)
         initViews(view);
 
         // 2. 啟動底部的跑馬燈
         TextView tvMarquee = view.findViewById(R.id.tv_member_marquee);
-        tvMarquee.setSelected(true);
+        if (tvMarquee != null) tvMarquee.setSelected(true);
 
         // 3. 執行 API 抓取
         // 🚩 這裡的 ID 目前寫死，之後建議從 SharedPreferences 取得登入者的 ID
-        fetchMemberData("a8e36451-c3fb-44ba-a05e-602ca0760166");
+        fetchMemberData(sessionManager.getMemberID());
 
         // 4. 設定按鈕點擊監聽 (先預留功能)
         setupListeners(view);
@@ -68,8 +85,13 @@ public class MemberFragment extends Fragment {
         RetrofitClient.getApiService(getContext()).GetMemberDetails(id).enqueue(new Callback<Member>() {
             @Override
             public void onResponse(Call<Member> call, Response<Member> response) {
-                if (isAdded() && response.isSuccessful() && response.body() != null) {
+                if (!isAdded()) return;
+
+                if (response.isSuccessful() && response.body() != null) {
                     bindData(response.body());
+                } else if (response.code() == 401) {
+                    // 🚩 如果 API 回傳 401，代表登入過期
+                    handleSessionExpired();
                 }
             }
             @Override
@@ -77,6 +99,16 @@ public class MemberFragment extends Fragment {
                 Log.e("API_MEMBER", "載入失敗: " + t.getMessage());
             }
         });
+    }
+
+
+    private void handleSessionExpired() {
+        sessionManager.logout();
+        Toast.makeText(getContext(), "請登入", Toast.LENGTH_SHORT).show();
+        if (getActivity() instanceof MainActivity) {
+            ((MainActivity) getActivity()).updateNavUI();
+            ((MainActivity) getActivity()).switchFragment(new LoginFragment());
+        }
     }
 
     private void bindData(Member member) {
@@ -104,7 +136,7 @@ public class MemberFragment extends Fragment {
         // 1. 訂單清單導向
         view.findViewById(R.id.btn_nav_user_orders).setOnClickListener(v -> {
             if (getActivity() instanceof MainActivity) {
-                ((MainActivity) getActivity()).switchFragment(new OrdersFragment());
+                ((MainActivity) getActivity()).switchFragment(new MyOrdersFragment());
             }
         });
 

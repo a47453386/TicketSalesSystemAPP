@@ -20,6 +20,7 @@ import com.example.ticketsalessystem.Adapters.QuestionListAdapter;
 import com.example.ticketsalessystem.Fragments.QuestionDetailFragment;
 import com.example.ticketsalessystem.R;
 import com.example.ticketsalessystem.RetrofitClient;
+import com.example.ticketsalessystem.SessionManager;
 
 import java.util.List;
 
@@ -31,70 +32,116 @@ import retrofit2.Response;
 public class MyQuestionsFragment extends Fragment {
 
     private RecyclerView rvOrders;
-
     private ProgressBar pbLoading;
+    private TextView tvTitle, tvEmptyView;
+    private SessionManager sessionManager;
 
     @Nullable
     @Override
     public View onCreateView(@NonNull LayoutInflater inflater, ViewGroup container, Bundle savedInstanceState) {
-        View v = inflater.inflate(R.layout.fragment_my_orders, container, false);
+        // 共用 fragment_my_orders 的像素風佈局
+        return inflater.inflate(R.layout.fragment_my_orders, container, false);
+    }
 
-        rvOrders = v.findViewById(R.id.rv_orders);
-        pbLoading = v.findViewById(R.id.pb_loading);
-        TextView tvMarquee = v.findViewById(R.id.tv_order_marquee);
+    @Override
+    public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
+        super.onViewCreated(view, savedInstanceState);
 
-        TextView tvTitle = v.findViewById(R.id.tv_order_title);
-        if (tvTitle != null) {
-            tvTitle.setText("[ 問題進度追蹤 ]"); // 你想換成的標題文字
+        // 1. 初始化 SessionManager 與元件
+        sessionManager = new SessionManager(requireContext());
+        initViews(view);
+
+        // 2. 登入檢查 (沒登入就踢走)
+        if (!sessionManager.isLoggedIn()) {
+            Toast.makeText(getContext(), "請先登入以追蹤問題進度", Toast.LENGTH_SHORT).show();
+            if (getActivity() instanceof MainActivity) {
+                ((MainActivity) getActivity()).switchFragment(new LoginFragment());
+            }
+            return;
         }
 
+        // 3. UI 初始設定
+        if (tvTitle != null) tvTitle.setText("[ 問題進度追蹤 ]");
+
+        TextView tvMarquee = view.findViewById(R.id.tv_order_marquee);
         if (tvMarquee != null) {
             tvMarquee.setText(">>> 點擊項目查看詳細回覆內容 <<<");
             tvMarquee.setSelected(true);
         }
 
         rvOrders.setLayoutManager(new LinearLayoutManager(getContext()));
-        fetchMyQuestions();
 
-        return v;
+        // 4. 開始抓資料
+        fetchMyQuestions();
+    }
+
+    private void initViews(View v) {
+        rvOrders = v.findViewById(R.id.rv_orders);
+        pbLoading = v.findViewById(R.id.pb_loading);
+        tvTitle = v.findViewById(R.id.tv_order_title);
+        tvEmptyView = v.findViewById(R.id.tv_empty_view); // 🚩 也要綁定這個
     }
 
     private void fetchMyQuestions() {
         if (pbLoading != null) pbLoading.setVisibility(View.VISIBLE);
 
         // 🚩 Callback 型別必須與介面定義完全一致
-        RetrofitClient.getApiService(getContext()).GetMyQuestions().enqueue(new Callback<List<QuestionDetail>>() {
+        RetrofitClient.getApiService(requireContext()).GetMyQuestions().enqueue(new Callback<List<QuestionDetail>>() {
             @Override
             public void onResponse(Call<List<QuestionDetail>> call, Response<List<QuestionDetail>> response) {
-                if (isAdded() && pbLoading != null) pbLoading.setVisibility(View.GONE);
+                if (!isAdded()) return;
+                if (pbLoading != null) pbLoading.setVisibility(View.GONE);
 
                 if (response.isSuccessful() && response.body() != null) {
+                    // ✅ 成功拿到問題清單
+                    tvEmptyView.setVisibility(View.GONE);
+                    rvOrders.setVisibility(View.VISIBLE);
+
                     QuestionListAdapter adapter = new QuestionListAdapter(
                             response.body(),
                             getContext(),
-                            new QuestionListAdapter.OnItemClickListener() {
-                                @Override
-                                public void onItemClick(QuestionDetail question) {
-                                    openQuestionDetail(question.questionID);
-                                }
-                            }
+                            question -> openQuestionDetail(question.questionID)
                     );
                     rvOrders.setAdapter(adapter);
+                } else {
+                    // ❌ 處理 404 (沒發問過) 或其他錯誤
+                    handleErrorResponse(response);
                 }
             }
 
             @Override
             public void onFailure(Call<List<QuestionDetail>> call, Throwable t) {
-                // 🚩 這裡原本紅字，因為參數型別要跟上面 Callback 的泛型一致
-                if (isAdded() && pbLoading != null) {
-                    pbLoading.setVisibility(View.GONE);
-                }
+                if (!isAdded()) return;
+                if (pbLoading != null) pbLoading.setVisibility(View.GONE);
                 Log.e("API_FAILURE", "連線失敗: " + t.getMessage());
-                Toast.makeText(getContext(), "伺服器連線失敗", Toast.LENGTH_SHORT).show();
+                tvEmptyView.setVisibility(View.VISIBLE);
+                tvEmptyView.setText("--- [ 系統 ]：網路連線異常 ---");
             }
         });
     }
+    private void handleErrorResponse(Response<?> response) {
+        String serverMsg = "目前尚無諮詢紀錄";
+        try {
+            if (response.errorBody() != null) {
+                org.json.JSONObject jObj = new org.json.JSONObject(response.errorBody().string());
+                serverMsg = jObj.getString("message");
+            }
+        } catch (Exception e) {
+            Log.e("API_ERROR", "解析失敗");
+        }
 
+        if (response.code() == 404) {
+            tvEmptyView.setVisibility(View.VISIBLE);
+            tvEmptyView.setText("---" + serverMsg + "---");
+            rvOrders.setVisibility(View.GONE);
+//            tvTitle.setText("[ 尚無問題 ]");
+        } else if (response.code() == 401) {
+            sessionManager.logout();
+            if (getActivity() instanceof MainActivity) {
+                ((MainActivity) getActivity()).switchFragment(new LoginFragment());
+            }
+        }
+    }
     private void openQuestionDetail(String questionId) {
         QuestionDetailFragment detailFragment = QuestionDetailFragment.newInstance(questionId);
         if (getActivity() instanceof MainActivity) {

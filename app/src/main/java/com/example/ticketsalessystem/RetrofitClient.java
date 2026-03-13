@@ -34,7 +34,7 @@ public class RetrofitClient {
 
             // 2. 加入 Logging 攔截器，方便在 Logcat 看 Cookie 有沒有傳成功
             HttpLoggingInterceptor logging = new HttpLoggingInterceptor();
-            logging.setLevel(HttpLoggingInterceptor.Level.HEADERS);
+            logging.setLevel(HttpLoggingInterceptor.Level.BODY);
 
             // 3. 建立 OkHttpClient
             OkHttpClient okHttpClient = new OkHttpClient.Builder()

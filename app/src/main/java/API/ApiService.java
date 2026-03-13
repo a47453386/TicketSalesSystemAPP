@@ -86,7 +86,7 @@ public interface ApiService {
 
 
     //訂單總攬
-    @GET("api/OrdersApi/api/OrdersIndex")
+    @GET("api/OrdersApi/OrdersIndex")
     Call<List<BookingDetailsResponse>> GetOrdersIndex() ;
 
     //訂單詳情

@@ -57,6 +57,7 @@
     <style name="PixelPopupMenu" parent="Widget.AppCompat.PopupMenu">
         <item name="android:itemBackground">@color/pixel_bg_dark</item>
         <item name="android:itemTextAppearance">@style/PixelMenuText</item>
+
     </style>
 
     <style name="PixelMenuText" parent="TextAppearance.AppCompat.Widget.PopupMenu.Large">

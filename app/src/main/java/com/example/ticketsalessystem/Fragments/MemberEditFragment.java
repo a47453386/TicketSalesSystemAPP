@@ -17,6 +17,7 @@ import androidx.fragment.app.Fragment;
 import com.example.ticketsalessystem.Activity.MainActivity;
 import com.example.ticketsalessystem.R;
 import com.example.ticketsalessystem.RetrofitClient;
+import com.example.ticketsalessystem.SessionManager;
 
 import Model.MemberUserEdit;
 import okhttp3.ResponseBody;
@@ -33,7 +34,9 @@ public class MemberEditFragment extends Fragment {
     private Button btnSave;
 
     // 🚩 測試用 MemberID
-    private String currentMemberId = "a8e36451-c3fb-44ba-a05e-602ca0760166";
+//    private String currentMemberId = "a8e36451-c3fb-44ba-a05e-602ca0760166";
+
+    private SessionManager sessionManager;
 
     @Nullable
     @Override
@@ -41,7 +44,24 @@ public class MemberEditFragment extends Fragment {
         // 載入 ScrollView 佈局
         View v = inflater.inflate(R.layout.fragment_member_edit, container, false);
 
+//        初始化 SessionManager
+        sessionManager = new SessionManager(requireContext());
+
         initViews(v);
+
+//        檢查登入狀態，如果沒登入就踢出去 (防禦性編碼)
+        if (!sessionManager.isLoggedIn()) {
+            Toast.makeText(getContext(), "請登入", Toast.LENGTH_SHORT).show();
+            sessionManager.logout();
+            // 執行跳轉
+            if (getActivity() instanceof MainActivity) {
+                MainActivity main = (MainActivity) getActivity();
+                main.updateNavUI(); // 先讓選單變回未登入狀態
+                main.switchFragment(new LoginFragment()); // 把目前的頁面換成登入頁
+            }
+            return v;
+        }
+
         fetchProfile(); // 🚩 啟動時即向資料庫抓取資料
 
         btnSave.setOnClickListener(view -> saveProfile());
@@ -67,8 +87,10 @@ public class MemberEditFragment extends Fragment {
     private void fetchProfile() {
         if (pbLoading != null) pbLoading.setVisibility(View.VISIBLE);
 
+        String memberId = sessionManager.getMemberID();
+
         // 呼叫 ApiService 抓取資料
-        RetrofitClient.getApiService(getContext()).GetProfile(currentMemberId).enqueue(new Callback<MemberUserEdit>() {
+        RetrofitClient.getApiService(getContext()).GetProfile(memberId).enqueue(new Callback<MemberUserEdit>() {
             @Override
             public void onResponse(Call<MemberUserEdit> call, Response<MemberUserEdit> response) {
                 if (isAdded() && pbLoading != null) pbLoading.setVisibility(View.GONE);
@@ -119,7 +141,7 @@ public class MemberEditFragment extends Fragment {
 
         // 封裝更新資料
         MemberUserEdit updateVm = new MemberUserEdit();
-        updateVm.memberID = currentMemberId;
+        updateVm.memberID =sessionManager.getMemberID();
         updateVm.tel = newTel;
         updateVm.email = newEmail;
         updateVm.address = newAddress;

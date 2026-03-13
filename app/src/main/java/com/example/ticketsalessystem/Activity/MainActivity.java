@@ -1,9 +1,7 @@
 package com.example.ticketsalessystem.Activity;
 
-import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
-import android.view.ContextThemeWrapper;
 import android.view.animation.AlphaAnimation;
 import android.view.animation.Animation;
 import android.widget.Button;
@@ -19,14 +17,14 @@ import com.example.ticketsalessystem.Fragments.HomeFragment;
 import com.example.ticketsalessystem.Fragments.FAQFragment;
 import com.example.ticketsalessystem.Fragments.LoginFragment;
 import com.example.ticketsalessystem.Fragments.MemberFragment;
+import com.example.ticketsalessystem.Fragments.MyOrdersFragment;
+import com.example.ticketsalessystem.Fragments.MyQuestionsFragment;
 import com.example.ticketsalessystem.Fragments.NewsListFragment;
 import com.example.ticketsalessystem.Fragments.OrderConfirmFragment;
-import com.example.ticketsalessystem.Fragments.OrdersFragment;
 import com.example.ticketsalessystem.Fragments.QuestionFragment;
 import com.example.ticketsalessystem.R;
 import com.example.ticketsalessystem.RetrofitClient;
 import com.example.ticketsalessystem.SessionManager;
-import com.google.android.material.button.MaterialButton;
 
 public class MainActivity extends AppCompatActivity {
 
@@ -111,7 +109,7 @@ public class MainActivity extends AppCompatActivity {
                 PopupMenu popup = new PopupMenu(wrapper, v);
                 popup.getMenuInflater().inflate(R.menu.menu_member_options, popup.getMenu());
 
-                // 🚩 B. 暴力破解：強制讓 PopupMenu 顯示選單圖示 (Icons)
+                // 🚩 B. 暴力破解：強制讓 PopupMenu 顯示圖示
                 try {
                     java.lang.reflect.Field[] fields = popup.getClass().getDeclaredFields();
                     for (java.lang.reflect.Field field : fields) {
@@ -128,14 +126,30 @@ public class MainActivity extends AppCompatActivity {
                     e.printStackTrace();
                 }
 
+                // 🚩 C. 統一染色為「像素亮藍色」
+                // 在 show() 之前遍歷選單，把所有 Icon 漆成藍色
+                android.view.Menu menu = popup.getMenu();
+                for (int i = 0; i < menu.size(); i++) {
+                    android.view.MenuItem item = menu.getItem(i);
+                    if (item.getIcon() != null) {
+                        // 使用亮藍色 #00CCFF
+                        androidx.core.graphics.drawable.DrawableCompat.setTint(
+                                item.getIcon(),
+                                android.graphics.Color.parseColor("#00F3FF")
+                        );
+                    }
+                }
+
                 // 🚩 C. 設定選單點擊邏輯
                 popup.setOnMenuItemClickListener(item -> {
                     int id = item.getItemId();
                     if (id == R.id.menu_view_profile) {
                         switchFragment(new MemberFragment());
                     } else if (id == R.id.menu_my_orders) {
-                        switchFragment(new OrdersFragment());
-                    } else if (id == R.id.menu_logout) {
+                        switchFragment(new MyOrdersFragment());
+                    } else if (id == R.id.menu_my_questions) {
+                        switchFragment(new MyQuestionsFragment());
+                    }else if (id == R.id.menu_logout) {
                         performLogout(); // 執行登出組合拳
                     }
                     return true;
@@ -196,7 +210,7 @@ public class MainActivity extends AppCompatActivity {
 
     public void switchToOrdersFragment() {
         // 切換到訂單 Fragment
-        switchFragment(new OrdersFragment());
+        switchFragment(new MyOrdersFragment());
 
         // 顯示一條溫馨提示
         Toast.makeText(this, "系統: 支付成功！已為您跳轉至訂單清單...", Toast.LENGTH_LONG).show();
