@@ -19,6 +19,7 @@ import Model.PublicNotice;
 
 import Model.Question;
 import Model.QuestionDetail;
+import Model.QuestionType;
 import Model.RegisterResponse;
 import Model.UserOrderDetail;
 import okhttp3.MultipartBody;
@@ -38,6 +39,11 @@ public interface ApiService {
     //節目清單
     @GET("api/HomeApi/Home")
     Call<List<ProgrammeModel>> getProgrammes();
+
+    //節目詳細資料
+    @GET("api/HomeApi/detail/{id}")
+    Call<ProgrammeDetail> getProgrammeDetail(@Path("id") String id);
+
     //最新五筆公告
     @GET("api/HomeApi/FiveNews")
     Call<List<PublicNotice>> GetFiveNews();
@@ -47,15 +53,7 @@ public interface ApiService {
     @GET("api/HomeApi/FAQs")
     Call<List<FAQ>> GetFAQs();
 
-    //我要發問
-    @Multipart
-    @POST("api/HomeApi/QuestionsCreate")
-    Call<ResponseBody> QuestionsCreate(
-            @Part("QuestionTitle") RequestBody title,
-            @Part("QuestionDescription") RequestBody description,
-            @Part("FAQTypeID") RequestBody typeId,
-            @Part MultipartBody.Part upload // 🚩 這裡對應 C# 的 IFormFile? upload
-    );
+
 
 
 
@@ -102,7 +100,16 @@ public interface ApiService {
 
 
 
-
+    //我要發問
+    @Multipart
+    @POST("api/QuestionApi/QuestionsCreate")
+    Call<ResponseBody> QuestionsCreate(
+            @Part("QuestionTitle") RequestBody title,       // 🚩 對應 DTO 的屬性名
+            @Part("QuestionDescription") RequestBody desc, // 🚩 對應 DTO 的屬性名
+            @Part("QuestionTypeID") RequestBody typeId,    // 🚩 對應 DTO 的屬性名
+            @Part("MemberID") RequestBody memberId,        // 🚩 對應 Controller 的參數名
+            @Part MultipartBody.Part upload                // 🚩 對應 Controller 的 IFormFile 參數名
+    );
     //問題清單
     @GET("api/QuestionApi/GetMyQuestions/")
     Call<List<QuestionDetail>> GetMyQuestions();
@@ -111,6 +118,9 @@ public interface ApiService {
     @GET("api/QuestionApi/GetQuestionsDetail/{id}")
     Call<QuestionDetail> getQuestionDetail(@Path("id") String id);
 
+    //問題種類清單
+    @GET("api/QuestionApi/GetQuestionTypes")
+    Call<List<QuestionType>> getQuestionTypes();
 
 
 
@@ -125,9 +135,8 @@ public interface ApiService {
 
 
 
-    //節目詳細資料
-    @GET("api/SeatsApi/detail/{id}")
-    Call<ProgrammeDetail> getProgrammeDetail(@Path("id") String id);
+
+
 
     //確認付款
     @POST("api/SeatsApi/confirm")

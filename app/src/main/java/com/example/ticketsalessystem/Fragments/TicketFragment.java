@@ -24,6 +24,7 @@ import com.bumptech.glide.Glide;
 import com.example.ticketsalessystem.Activity.MainActivity;
 import com.example.ticketsalessystem.R;
 import com.example.ticketsalessystem.RetrofitClient;
+import com.example.ticketsalessystem.SessionManager;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -41,13 +42,16 @@ public class TicketFragment extends Fragment {
     private TextView tvName, tvPlace, tvDesc, tvAreaInfo;
     private Button btnBook;
     private ProgressBar progressBar;
-    private Spinner spinnerSessions, spinnerAreas;
+    private Spinner spinnerSessions, spinnerAreas,spinnerTicketCount;
 
     // 資料管理
     private String programmeId;
     private List<Session> sessionList;
     private String selectedSessionId, selectedAreaId, programmeName, selectedSessionTime, selectedAreaName;
     private double selectedPrice;
+
+    private SessionManager sessionManager;
+
 
     /**
      * 🚩 靜態方法：建立 Fragment 時傳入節目 ID
@@ -70,6 +74,8 @@ public class TicketFragment extends Fragment {
     @Override
     public void onViewCreated(@NonNull View view, @Nullable Bundle savedInstanceState) {
         super.onViewCreated(view, savedInstanceState);
+
+        sessionManager = new SessionManager(getContext());
 
         // 1. 讀取傳入的 ID
         if (getArguments() != null) {
@@ -95,11 +101,45 @@ public class TicketFragment extends Fragment {
         spinnerAreas = v.findViewById(R.id.spinner_areas);
         btnBook = v.findViewById(R.id.btn_buy);
         progressBar = v.findViewById(R.id.progressBar);
+        spinnerTicketCount = v.findViewById(R.id.spinner_ticket_count);
 
         // 統一標題字體
         tvName.setTypeface(Typeface.MONOSPACE);
+        // 🚩 設定 1~4 的選單內容
+        setupTicketCountSpinner();
     }
+    private void setupTicketCountSpinner() {
+        // 建立 1 到 4 的選單
+        List<String> counts = new ArrayList<>();
+        counts.add("1 張");
+        counts.add("2 張");
+        counts.add("3 張");
+        counts.add("4 張");
 
+        // 使用你原本自定義的 ArrayAdapter 風格（確保顏色與字體統一）
+        ArrayAdapter<String> adapter = new ArrayAdapter<String>(getContext(), android.R.layout.simple_spinner_item, counts) {
+            @NonNull
+            @Override
+            public View getView(int p, @Nullable View conv, @NonNull ViewGroup parent) {
+                TextView tv = (TextView) super.getView(p, conv, parent);
+                tv.setTextColor(Color.parseColor("#FFCC00")); // 像素黃
+                tv.setTypeface(Typeface.MONOSPACE);
+                return tv;
+            }
+
+            @Override
+            public View getDropDownView(int p, @Nullable View conv, @NonNull ViewGroup parent) {
+                TextView tv = (TextView) super.getDropDownView(p, conv, parent);
+                tv.setTextColor(Color.WHITE);
+                tv.setBackgroundColor(Color.parseColor("#1A1A1A"));
+                tv.setTypeface(Typeface.MONOSPACE);
+                return tv;
+            }
+        };
+
+        adapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+        spinnerTicketCount.setAdapter(adapter);
+    }
     private void fetchData(String id) {
         if (progressBar != null) progressBar.setVisibility(View.VISIBLE);
 
@@ -230,10 +270,27 @@ public class TicketFragment extends Fragment {
      * 🚩 核心跳轉：現在是從一個 Fragment 切換到另一個 Fragment (OrderConfirmFragment)
      */
     private void jumpToConfirm() {
+
         if (selectedSessionId == null || selectedAreaId == null) {
             Toast.makeText(getContext(), "請先選擇場次與區域", Toast.LENGTH_SHORT).show();
             return;
         }
+        //判斷會員是否登入
+        if (!isUserLoggedIn()) {
+            Toast.makeText(getContext(), "請先登入會員以繼續購票", Toast.LENGTH_SHORT).show();
+
+            // 切換到登入畫面
+            if (getActivity() instanceof MainActivity) {
+                ((MainActivity) getActivity()).switchFragment(new LoginFragment());
+            }
+            return;
+        }
+
+        // 抓取目前選中的張數 (位置 0 代表 1張，所以要 +1)
+        int ticketCount = spinnerTicketCount.getSelectedItemPosition() + 1;
+
+        //計算總金額 (單價 * 張數)
+        double totalAmount = selectedPrice * ticketCount;
 
         Bundle args = new Bundle();
         args.putString("PROGRAMME_ID", programmeId);
@@ -242,8 +299,8 @@ public class TicketFragment extends Fragment {
         args.putString("PROGRAMME_NAME", programmeName);
         args.putString("SESSION_TIME", selectedSessionTime);
         args.putString("AREA_NAME", selectedAreaName);
-        args.putDouble("TOTAL_AMOUNT", selectedPrice);
-        args.putInt("TICKET_COUNT", 1);
+        args.putDouble("TOTAL_AMOUNT", totalAmount);
+        args.putInt("TICKET_COUNT", ticketCount);
 
         // 🚩 透過 MainActivity 的方法進行切換，確保 Navbar 不會消失
         if (getActivity() instanceof MainActivity) {
@@ -251,5 +308,9 @@ public class TicketFragment extends Fragment {
             // 直接呼叫 switchFragment，這會保留 Navbar，只抽換內容區
             main.switchFragment(OrderConfirmFragment.newInstance(args));
         }
+    }
+
+    private boolean isUserLoggedIn() {
+        return sessionManager.isLoggedIn();
     }
 }

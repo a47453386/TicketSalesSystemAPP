@@ -92,12 +92,32 @@
                 android:textColor="@color/pixel_blue"
                 android:textSize="14sp" />
 
+
             <Spinner
                 android:id="@+id/spinner_areas"
                 android:layout_width="match_parent"
                 android:layout_height="48dp"
                 android:layout_marginTop="8dp"
                 android:background="@drawable/pixel_border" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:fontFamily="monospace"
+                android:text="3. 選擇購票張數："
+                android:textColor="@color/pixel_blue"
+                android:textSize="14sp" />
+
+            <Spinner
+                android:id="@+id/spinner_ticket_count"
+                android:layout_width="match_parent"
+                android:layout_height="48dp"
+                android:layout_marginTop="8dp"
+                android:background="@drawable/pixel_border"
+                android:overlapAnchor="false"
+                android:spinnerMode="dropdown" />
+
         </LinearLayout>
 
         <TextView
