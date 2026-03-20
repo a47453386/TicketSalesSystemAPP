@@ -60,8 +60,13 @@ public class ProgrammeAdapter extends RecyclerView.Adapter<ProgrammeAdapter.View
 
         // 3. 🚩 處理圖片網址 IP 轉換 (解決模擬器讀取問題)
         String imageUrl = item.coverImage;
-        if (imageUrl != null && imageUrl.contains("192.168.0.107")) {
-            // 將電腦實體 IP 替換為模擬器專用的 10.0.2.2
+        boolean isEmulator = android.os.Build.FINGERPRINT.contains("generic")
+                || android.os.Build.FINGERPRINT.contains("unknown")
+                || android.os.Build.MODEL.contains("google_sdk")
+                || android.os.Build.MODEL.contains("Emulator")
+                || android.os.Build.MODEL.contains("Android SDK built for x86");
+
+        if (isEmulator && imageUrl != null) {
             imageUrl = imageUrl.replace("192.168.0.107", "10.0.2.2");
         }
 

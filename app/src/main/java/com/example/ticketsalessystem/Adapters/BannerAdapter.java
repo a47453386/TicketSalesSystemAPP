@@ -47,11 +47,28 @@ public class BannerAdapter extends RecyclerView.Adapter<BannerAdapter.ViewHolder
 
         // 🚩 2. 圖片網址處理：解決模擬器無法讀取實體 IP 的問題
         String imageUrl = item.coverImage;
-        if (imageUrl != null && imageUrl.contains("192.168.0.107")) {
-            // 將電腦實體 IP 替換為模擬器專用的 10.0.2.2
-            imageUrl = imageUrl.replace("192.168.0.107", "10.0.2.2");
-            Log.d("GLIDE_DEBUG", "轉換後的網址: " + imageUrl);
-        }
+
+        // a. 先判斷當前是否為模擬器 (Android SDK 的標準判斷方式)
+                boolean isEmulator = android.os.Build.FINGERPRINT.startsWith("generic")
+                        || android.os.Build.FINGERPRINT.startsWith("unknown")
+                        || android.os.Build.MODEL.contains("google_sdk")
+                        || android.os.Build.MODEL.contains("Emulator")
+                        || android.os.Build.MODEL.contains("Android SDK built for x86")
+                        || android.os.Build.MANUFACTURER.contains("Genymotion");
+
+                Log.d("GLIDE_DEBUG", "當前環境是否為模擬器: " + isEmulator);
+
+        // b. 根據環境決定是否替換 IP
+                if (imageUrl != null) {
+                    if (isEmulator && imageUrl.contains("192.168.0.107")) {
+                        // [環境：模擬器] -> 將實體 IP 替換為 10.0.2.2
+                        imageUrl = imageUrl.replace("192.168.0.107", "10.0.2.2");
+                        Log.d("GLIDE_DEBUG", "[模擬器] 轉換網址為 loopback: " + imageUrl);
+                    } else {
+                        // [環境：實體手機 或 IP不符] -> 保持原樣 (192.168.0.107)
+                        Log.d("GLIDE_DEBUG", "[實體手機] 使用原始網址: " + imageUrl);
+                    }
+                }
 
         // 3. 使用 Glide 載入圖片
         Glide.with(mContext)

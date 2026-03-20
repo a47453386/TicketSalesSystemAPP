@@ -6,6 +6,8 @@ import com.franmontiel.persistentcookiejar.PersistentCookieJar;
 import com.franmontiel.persistentcookiejar.cache.SetCookieCache;
 import com.franmontiel.persistentcookiejar.persistence.SharedPrefsCookiePersistor;
 
+import java.util.concurrent.TimeUnit;
+
 import API.ApiService;
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
@@ -14,7 +16,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
 
 public class RetrofitClient {
     private static Retrofit retrofit = null;
-    public static final String IP = "10.0.2.2"; // 模擬器用 10.0.2.2
+    public static final String IP = "192.168.0.107"; // 模擬器用 10.0.2.2
     public static final String BASE_URL = "http://" + IP + ":5098/";
 
     // 🚩 使用 ClearableCookieJar 介面，支援持久化儲存
@@ -23,6 +25,8 @@ public class RetrofitClient {
     // 🚩 修正：getInstance 需要傳入 Context 以初始化 Cookie 儲存
     public static Retrofit getInstance(Context context) {
         if (retrofit == null) {
+
+            Context appContext = context.getApplicationContext();
 
             // 1. 初始化持久化 CookieJar (這會把 Cookie 存進手機硬碟)
             if (cookieJar == null) {
@@ -38,8 +42,10 @@ public class RetrofitClient {
 
             // 3. 建立 OkHttpClient
             OkHttpClient okHttpClient = new OkHttpClient.Builder()
-                    .cookieJar(cookieJar) // 🚩 套用持久化 CookieJar
-                    .addInterceptor(logging) // 🚩 套用 Log 紀錄
+                    .cookieJar(cookieJar)
+                    .addInterceptor(logging)
+                    .connectTimeout(60, TimeUnit.SECONDS) // 🚩 增加連線逾時設定
+                    .readTimeout(60, TimeUnit.SECONDS)
                     .build();
 
             // 4. 建立 Retrofit
