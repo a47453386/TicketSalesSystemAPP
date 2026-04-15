@@ -23,9 +23,12 @@
 ## 🔗 相關專案
 票券驗證端 App：[https://github.com/a47453386/TicketVerifyApp.git]
 
-## 💻 本機執行方式
+## 💻 執行方式
+本專案已實際部署於 Android 實體裝置，可完整操作所有功能。
+
+**開發環境執行：**
 1. Clone 此專案至 Android Studio
 2. 修改 API 連線位址（設定檔中的 Base URL）
 3. 確認後端 Web API 已啟動
-4. 執行於模擬器或實體裝置
+4. 安裝至實體 Android 裝置或模擬器執行
 
